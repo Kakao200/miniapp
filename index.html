@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Casino Mini App</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+<div id="app">
+
+    <!-- Верхняя панель -->
+    <div id="topbar">
+        <span id="nickname">Гость</span>
+    </div>
+
+    <!-- Экран логина -->
+    <div id="login-screen" class="screen">
+        <h2>Вход</h2>
+        <input id="codeInput" placeholder="Введите код" />
+        <button id="loginBtn">Войти</button>
+    </div>
+
+    <!-- Главное меню -->
+    <div id="main-screen" class="screen hidden">
+        <h2>Кейсы</h2>
+        <div class="case-box">
+            <h3>БЕСПЛАТНО</h3>
+            <button id="openCaseBtn">Открыть</button>
+        </div>
+    </div>
+
+    <!-- Экран открытия кейса -->
+    <div id="case-screen" class="screen hidden">
+        <h2>Открытие кейса</h2>
+
+        <div class="roll-line">😀 😁 😂 🤣 😊 🙂 😉 😍 🤩 😎</div>
+
+        <button id="rollBtn">Открыть</button>
+
+        <div class="chances">
+            <p>😀 — 40%</p>
+            <p>😁 — 25%</p>
+            <p>😂 — 15%</p>
+            <p>😎 — 10%</p>
+            <p>🤩 — 10%</p>
+        </div>
+
+        <button id="backBtn">Назад</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
