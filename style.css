@@ -1,332 +1,309 @@
+/* Переменные для Цветов */
 :root {
-    --bg-color: #f0f2f5;
-    --card-bg-color: #ffffff;
-    --text-color-dark: #333333;
-    --text-color-light: #666666;
-    --primary-blue: #007bff;
-    --accent-yellow: #ffc107;
-    --border-color: #e0e0e0;
-    --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.08);
-    --border-radius-base: 12px;
-    --border-radius-sm: 8px;
-    --error-color: #e3342f;
+    --bg-color: #1a1a2e; /* Темный фон */
+    --card-color: #2c2c44; /* Фон карточек */
+    --text-color: #ffffff; /* Светлый текст */
+    --primary-color: #e94560; /* Акцент (Красный/Розовый) */
+    --secondary-color: #0f3460; /* Дополнительный (Синий) */
+    --nav-bar-color: #1c1c38; /* Фон навигации */
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --border-radius: 12px;
+
+    /* Светлая Тема (Неактивно по умолчанию) */
+    --light-bg-color: #f0f2f5;
+    --light-card-color: #ffffff;
+    --light-text-color: #1a1a2e;
+    --light-nav-bar-color: #ffffff;
 }
 
-.dark-theme {
-    --bg-color: #1a1a1a;
-    --card-bg-color: #2d2d2d;
-    --text-color-dark: #ffffff;
-    --text-color-light: #cccccc;
-    --border-color: #404040;
-    --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.3);
+/* Светлая Тема (Класс) */
+.light-theme {
+    --bg-color: var(--light-bg-color);
+    --card-color: var(--light-card-color);
+    --text-color: var(--light-text-color);
+    --nav-bar-color: var(--light-nav-bar-color);
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     background-color: var(--bg-color);
-    color: var(--text-color-dark);
+    color: var(--text-color);
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 #app-container {
     width: 100%;
     max-width: 450px;
+    box-shadow: var(--shadow);
     background-color: var(--bg-color);
     min-height: 100vh;
-    box-shadow: var(--shadow-light);
     display: flex;
     flex-direction: column;
 }
 
-.app-screen {
+.screen {
     width: 100%;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-.hidden {
-    display: none !important;
-}
-
-#login-screen {
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.login-card {
-    background-color: var(--card-bg-color);
-    border-radius: var(--border-radius-base);
-    padding: 30px;
-    width: 90%;
-    max-width: 300px;
-    text-align: center;
-    box-shadow: var(--shadow-light);
-}
-
-#login-screen h2 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-}
-
-#login-screen input {
-    width: 100%;
-    padding: 10px;
-    margin: 15px 0;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-sm);
+    min-height: 100vh;
     box-sizing: border-box;
-    text-align: center;
-    font-size: 1.1em;
-    background-color: var(--card-bg-color);
-    color: var(--text-color-dark);
+    display: flex;
+    flex-direction: column;
 }
 
-.error-msg {
-    color: var(--error-color);
-    font-weight: 500;
-    margin-top: 10px;
+.hidden { display: none !important; }
+
+/* Кнопки */
+button {
+    cursor: pointer;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.1s, color 0.2s;
+}
+button:active { transform: scale(0.98); }
+
+.primary-btn { background-color: var(--primary-color); color: var(--text-color); }
+.primary-btn:hover { background-color: #ff6a80; }
+
+.secondary-btn { background-color: var(--secondary-color); color: var(--text-color); }
+
+.icon-btn {
+    background: var(--secondary-color);
+    border: none;
+    color: var(--text-color);
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.icon-btn:hover { background-color: #3b5a7a; }
+.light-theme .icon-btn { 
+    background-color: #e0e0e0;
+    color: var(--light-text-color);
+}
+.light-theme .icon-btn:hover { background-color: #d0d0d0; }
+
+
+.full-width-btn { width: 100%; margin-top: 15px; }
+
+input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    background-color: var(--card-color);
+    color: var(--text-color);
+    box-sizing: border-box;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
+/* Хедер (Верхняя Панель) */
 #app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    background-color: var(--card-bg-color);
-    border-bottom: 1px solid var(--border-color);
+    background-color: var(--card-color);
+    border-bottom: 1px solid #3c3c54;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
-#app-header h1 {
-    font-size: 1.2em;
-    font-weight: 600;
-    margin: 0;
-    color: var(--text-color-dark);
-}
-
-.balance-section {
-    display: flex;
-    align-items: center;
-}
-
-.balance-item {
-    display: flex;
-    align-items: center;
-    background-color: var(--bg-color);
-    border-radius: var(--border-radius-sm);
+.header-left, .header-right { display: flex; align-items: center; }
+.balance-info { 
+    display: flex; 
+    align-items: center; 
+    font-weight: 700; 
+    background-color: var(--secondary-color);
     padding: 8px 12px;
-    font-weight: 600;
-    color: var(--text-color-dark);
+    border-radius: 20px;
+    font-size: 0.95rem;
+    color: #ffc107; /* Золотой цвет для баланса */
 }
+.balance-info i { margin-right: 8px; color: #ffc107; }
 
-.star-icon {
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
+.light-theme #app-header { border-bottom: 1px solid #d0d0d0; }
+.light-theme .balance-info { background-color: #e0e0e0; color: #cc7800; }
+
+/* Контент */
+#app-content { 
+    padding: 20px; 
+    flex-grow: 1; 
+    padding-bottom: 80px; /* Отступ для навигационной панели */
 }
-
-.theme-toggle {
-    cursor: pointer;
-    font-size: 1.2em;
-    color: var(--text-color-light);
-    padding: 8px;
+.content-view { animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
+.subtitle { color: #b0b0d0; margin-top: -10px; margin-bottom: 25px; font-size: 0.9em; }
+.light-theme .subtitle { color: #555577; }
 
-#app-content {
-    flex-grow: 1;
+/* Карточки и Заглушки */
+.login-card, .case-card, .profile-details-card, .stats-card, .probabilities-box, .placeholder-card {
+    background-color: var(--card-color);
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    text-align: left;
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
+.login-card { 
+    text-align: center; 
+    margin-top: 40vh; 
+    transform: translateY(-50%); 
+}
+.placeholder-card { text-align: center; color: #b0b0d0; }
+.light-theme .placeholder-card { color: #555577; }
 
-.case-section {
+
+.promo-banner {
+    background-color: var(--secondary-color);
+    padding: 10px;
+    border-radius: 8px;
     text-align: center;
-    width: 100%;
+    font-weight: 600;
 }
+.light-theme .promo-banner { background-color: #e0e0e0; color: var(--light-text-color); }
 
-.case-image img {
-    width: 200px;
-    height: 200px;
-    object-fit: contain;
+.back-link {
+    color: var(--primary-color);
+    cursor: pointer;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+.back-link i { margin-right: 5px; }
+
+
+/* Кейс (Осталось без изменений) */
+.case-card { text-align: center; cursor: pointer; transition: transform 0.2s, background-color 0.3s; }
+.case-card:hover { transform: translateY(-5px); }
+.case-icon { font-size: 3rem; margin-bottom: 10px; }
+/* ... (стили для ленты прокрутки и результатов кейса без изменений) ... */
+.case-opening-area {
+    overflow: hidden;
+    position: relative;
+    height: 80px;
+    background-color: #131320;
+    border-radius: 8px;
+    border: 2px solid var(--primary-color);
     margin-bottom: 20px;
 }
-
-.main-action-btn {
-    width: 100%;
-    max-width: 300px;
-    padding: 15px 20px;
-    border-radius: var(--border-radius-base);
-    background-color: var(--primary-blue);
-    color: #ffffff;
-    font-size: 1.1em;
-    font-weight: 600;
+.scroll-wrapper { position: relative; height: 100%; }
+.prize-reel {
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 8px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    position: absolute;
+    left: 0;
+    transition: transform 5s cubic-bezier(0.1, 0.9, 0.2, 1);
+    width: max-content;
 }
-
-.main-action-btn:hover {
-    background-color: #0056b3;
-}
-
-.main-action-btn img {
-    width: 20px;
-    height: 20px;
-}
-
-#case-screen {
-    padding: 20px;
-}
-
-.case-opening-container {
-    text-align: center;
-}
-
-.case-opening-container h3 {
-    margin-bottom: 15px;
-    color: var(--text-color-dark);
-}
-
-.prizes-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
 .prize-item {
+    padding: 0 10px;
+    flex-shrink: 0;
+    width: 60px;
+    text-align: center;
+    height: 100%;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    padding: 15px 10px;
-    border-radius: var(--border-radius-sm);
-    border: 1px solid var(--border-color);
-    background-color: var(--card-bg-color);
-    transition: transform 0.2s ease;
 }
-
-.prize-item:hover {
-    transform: translateY(-2px);
+.indicator {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 100%;
+    background-color: #ffc107;
+    box-shadow: 0 0 10px #ffc107;
 }
-
-.prize-item img {
+.prize-image {
     width: 60px;
     height: 60px;
     object-fit: contain;
-    margin-bottom: 8px;
 }
-
-.prize-name-small {
-    font-size: 0.8em;
-    font-weight: 500;
-    color: var(--text-color-dark);
+.case-result-box {
+    margin-top: 20px;
     text-align: center;
+    background-color: var(--secondary-color);
 }
-
-.opening-animation {
-    margin: 30px 0;
-    padding: 20px;
-    background-color: var(--card-bg-color);
-    border-radius: var(--border-radius-base);
-    border: 2px solid var(--primary-blue);
-}
-
-.spinning-prize img {
-    width: 100px;
-    height: 100px;
+.final-prize-image {
+    width: 90px;
+    height: 90px;
     object-fit: contain;
-    animation: pulse 1s infinite;
+    animation: prizeGlow 1.5s infinite alternate;
 }
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+@keyframes prizeGlow {
+    from { filter: drop-shadow(0 0 5px rgba(233, 69, 96, 0.5)); transform: scale(1); }
+    to { filter: drop-shadow(0 0 15px var(--primary-color)); transform: scale(1.05); }
 }
-
-#result-screen {
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.result-card {
-    text-align: center;
-    padding: 30px;
-    width: 90%;
-    max-width: 300px;
-}
-
-.prize-result img {
-    width: 120px;
-    height: 120px;
-    object-fit: contain;
-    margin-bottom: 20px;
-}
-
-.prize-name {
-    font-size: 1.3em;
-    font-weight: 600;
-    color: var(--primary-blue);
-    margin: 10px 0;
-}
-
-.prize-value {
+.open-btn { width: 100%; font-size: 1.1rem; padding: 15px; }
+.probabilities-box p {
+    margin: 5px 0;
+    font-size: 0.9em;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    font-size: 1.1em;
-    color: var(--text-color-light);
-    margin: 10px 0;
+    justify-content: space-between;
 }
+/* Конец стилей Кейса */
 
-.star-icon-small {
-    width: 18px;
-    height: 18px;
-}
 
-#bottom-nav {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    background-color: var(--card-bg-color);
-    border-top: 1px solid var(--border-color);
-    position: sticky;
+/* Нижняя Навигационная Панель */
+#nav-bar {
+    position: fixed;
     bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100%;
     max-width: 450px;
+    height: 60px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: var(--nav-bar-color);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
-
 .nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-decoration: none;
-    color: var(--text-color-light);
-    font-size: 0.8em;
+    justify-content: center;
+    background: none;
+    color: #b0b0d0;
+    font-size: 0.7rem;
     font-weight: 500;
-    transition: color 0.2s ease;
     padding: 5px;
+    flex-grow: 1;
+    height: 100%;
+    border-radius: 0;
 }
-
 .nav-item i {
-    font-size: 1.4em;
-    margin-bottom: 3px;
+    font-size: 1.2rem;
+    margin-bottom: 2px;
 }
-
 .nav-item.active {
-    color: var(--primary-blue);
+    color: var(--primary-color);
+    font-weight: 700;
 }
+.light-theme #nav-bar { box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); }
+.light-theme .nav-item { color: #555577; }
+.light-theme .nav-item.active { color: var(--primary-color); }
+

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <script src="script.js?v=7" defer></script>
+    <script src="script.js?v=8" defer></script>
 </head>
 <body>
     <div id="app-container">
@@ -25,28 +25,65 @@
 
         <section id="main-app" class="screen hidden">
             <header id="app-header">
-                <div class="profile-info" onclick="navigateTo('profile')">
-                    <i class="fas fa-user-circle"></i>
-                    <span id="header-username"></span>
+                <div class="header-left">
+                    <div class="balance-info">
+                        <i class="fas fa-wallet"></i>
+                        <span id="header-balance">0.00 руб.</span>
+                    </div>
                 </div>
-                <button onclick="logout()" class="icon-btn"><i class="fas fa-sign-out-alt"></i></button>
+                <div class="header-right">
+                    <button onclick="toggleTheme()" class="icon-btn theme-toggle-btn"><i class="fas fa-sun" id="theme-icon"></i></button>
+                    <button onclick="logout()" class="icon-btn logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
             </header>
 
             <main id="app-content">
                 <div id="home-screen" class="content-view">
-                    <h1>💰 Бесплатный Кейс</h1>
-                    <p class="subtitle">Открой свой первый приз абсолютно **БЕСПЛАТНО!**</p>
+                    <h2>📦 Кейсы</h2>
+                    <p class="subtitle">Откройте свой приз!</p>
                     
                     <div id="case-preview" class="case-card" onclick="navigateTo('case')">
                         <div class="case-icon">🎁</div>
                         <h3>Daily Free Case</h3>
                         <p class="case-desc">Получай приз каждый день.</p>
-                        <button class="primary-btn full-width-btn"><i class="fas fa-gift"></i> Открыть раздел</button>
+                        <button class="primary-btn full-width-btn"><i class="fas fa-gift"></i> Открыть</button>
                     </div>
                     
                     <div class="promo-banner">
                         <p>⭐️ Больше кейсов скоро!</p>
                     </div>
+                </div>
+
+                <div id="raffles-screen" class="content-view hidden">
+                    <h2>🎟️ Розыгрыши</h2>
+                    <div class="placeholder-card">
+                        <p>Раздел "Розыгрыши" в активной разработке.</p>
+                        <p>Скоро здесь появятся крутые события!</p>
+                    </div>
+                </div>
+                
+                <div id="top-screen" class="content-view hidden">
+                    <h2>🏆 Топ Игроков</h2>
+                    <div class="placeholder-card">
+                        <p>Список Топ Игроков (по выигрышу) скоро будет доступен.</p>
+                    </div>
+                </div>
+
+                <div id="profile-screen" class="content-view hidden">
+                    <h2>👤 Мой Профиль</h2>
+                    <div class="profile-details-card">
+                        <p><strong>Имя/Логин:</strong> <span id="profile-username"></span></p>
+                        <p><strong>ID в Telegram:</strong> <span id="profile-id"></span></p>
+                        <p><strong>Баланс:</strong> <span id="profile-balance">0.00 руб.</span></p>
+                    </div>
+
+                    <h3>Статистика</h3>
+                    <div class="stats-card">
+                        <p>Открыто кейсов: 0</p>
+                        <p>Получено призов: 0</p>
+                    </div>
+
+                    <button onclick="logout()" class="secondary-btn full-width-btn"><i class="fas fa-sign-out-alt"></i> Выйти из аккаунта</button>
                 </div>
 
                 <div id="case-screen" class="content-view hidden">
@@ -80,25 +117,14 @@
                     </div>
                 </div>
 
-                <div id="profile-screen" class="content-view hidden">
-                    <div class="back-link" onclick="navigateTo('home')"><i class="fas fa-chevron-left"></i> Назад</div>
-                    <h2>👤 Мой Профиль</h2>
-                    <div class="profile-details-card">
-                        <p><strong>Имя/Логин:</strong> <span id="profile-username"></span></p>
-                        <p><strong>ID в Telegram:</strong> <span id="profile-id"></span></p>
-                        <p><strong>Баланс:</strong> 0.00 руб. (пока неактивно)</p>
-                    </div>
-
-                    <h3>Статистика</h3>
-                    <div class="stats-card">
-                        <p>Открыто кейсов: 0</p>
-                        <p>Получено призов: 0</p>
-                    </div>
-
-                    <button onclick="logout()" class="secondary-btn full-width-btn"><i class="fas fa-sign-out-alt"></i> Выйти из аккаунта</button>
-                </div>
-
             </main>
+            
+            <nav id="nav-bar">
+                <button class="nav-item active" data-view="home"><i class="fas fa-box"></i> Главная</button>
+                <button class="nav-item" data-view="raffles"><i class="fas fa-ticket-alt"></i> Розыгрыши</button>
+                <button class="nav-item" data-view="top"><i class="fas fa-trophy"></i> Топ</button>
+                <button class="nav-item" data-view="profile"><i class="fas fa-user-circle"></i> Профиль</button>
+            </nav>
         </section>
     </div>
 </body>
