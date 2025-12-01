@@ -4,9 +4,9 @@ let currentView = 'login';
 
 // --- ОБНОВЛЕННЫЙ МАССИВ ПРИЗОВ (с путями к картинкам) ---
 const PRIZES = [
-    { emoji: "🐻", prob: 0.5, name: "Мишка", image: "assets/Мишка.png" }, 
-    { emoji: "💎", prob: 0.3, name: "Алмаз", image: "assets/Алмаз.png" }, 
-    { emoji: "🐸", prob: 0.2, name: "Пепе", image: "assets/Pepe.png" } 
+    { emoji: "🐻", prob: 0.7, name: "Мишка", image: "assets/Мишка.png" }, 
+    { emoji: "💎", prob: 0.2, name: "Алмаз", image: "assets/Алмаз.png" }, 
+    { emoji: "🐸", prob: 0.1, name: "Pepe", image: "assets/Pepe.png" } 
 ];
 const PRIZE_ITEM_WIDTH = 80; // (60px width + 2*10px padding)
 const SCROLL_DURATION = 5000; // 5 секунд анимация
