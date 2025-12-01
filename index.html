@@ -3,40 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мини-Казино</title>
+    <title>⚡️ Mini-App Casino | PRO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="script.js" defer></script>
 </head>
 <body>
-    <!-- Экран входа -->
-    <div id="login-screen">
-        <h2>Вход</h2>
-        <input type="text" id="code-input" placeholder="Введите код">
-        <button onclick="login()">Войти</button>
-        <p id="login-msg"></p>
-    </div>
+    <div id="app-container">
+        <section id="login-screen" class="screen">
+            <div class="login-card">
+                <h2>🔑 Вход в App</h2>
+                <p>Введите код, полученный от бота:</p>
+                <input type="text" id="code-input" placeholder="Пятизначный код" maxlength="5">
+                <button onclick="login()" class="primary-btn"><i class="fas fa-sign-in-alt"></i> Войти</button>
+                <p id="login-msg" class="error-msg"></p>
+            </div>
+        </section>
 
-    <!-- Основной экран после входа -->
-    <div id="main-screen" style="display:none">
-        <h2>Привет, <span id="username"></span>!</h2>
-        <button onclick="logout()" class="logout-btn">Выйти</button>
-        <div id="case" class="case-box">
-            <h3>БЕСПЛАТНО</h3>
-            <button onclick="openCase()">Открыть кейс</button>
-        </div>
-    </div>
+        <section id="main-app" class="screen hidden">
+            <header id="app-header">
+                <div class="profile-info" onclick="navigateTo('profile')">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="header-username"></span>
+                </div>
+                <button onclick="logout()" class="icon-btn"><i class="fas fa-sign-out-alt"></i></button>
+            </header>
 
-    <!-- Результат кейса -->
-    <div id="result" style="display:none">
-        <h3>Выпало:</h3>
-        <span id="emoji" style="font-size:2rem;"></span>
-        <button onclick="back()">Назад</button>
-        <div id="probabilities">
-            <p>🍎 — 50%</p>
-            <p>🍌 — 30%</p>
-            <p>🍒 — 20%</p>
-        </div>
+            <main id="app-content">
+                <div id="home-screen" class="content-view">
+                    <h1>💰 Бесплатный Кейс</h1>
+                    <p class="subtitle">Открой свой первый приз абсолютно **БЕСПЛАТНО!**</p>
+                    
+                    <div id="case-preview" class="case-card" onclick="navigateTo('case')">
+                        <div class="case-icon">🎁</div>
+                        <h3>Daily Free Case</h3>
+                        <p class="case-desc">Получай приз каждый день.</p>
+                        <button class="primary-btn full-width-btn"><i class="fas fa-gift"></i> Открыть раздел</button>
+                    </div>
+                    
+                    <div class="promo-banner">
+                        <p>⭐️ Больше кейсов скоро!</p>
+                    </div>
+                </div>
+
+                <div id="case-screen" class="content-view hidden">
+                    <div class="back-link" onclick="navigateTo('home')"><i class="fas fa-chevron-left"></i> Назад</div>
+
+                    <h2>Daily Free Case</h2>
+                    
+                    <div class="case-opening-area">
+                        <div class="scroll-wrapper">
+                            <div id="prize-scroll-reel" class="prize-reel">
+                                </div>
+                            <div class="indicator"></div>
+                        </div>
+                    </div>
+
+                    <button id="open-case-btn" onclick="openCase()" class="primary-btn open-btn"><i class="fas fa-key"></i> ОТКРЫТЬ (0 руб)</button>
+
+                    <div id="case-result-box" class="case-result-box hidden">
+                        <h3>🎉 Ваш приз!</h3>
+                        <div id="result-emoji" class="result-emoji-display"></div>
+                        <p id="result-msg"></p>
+                    </div>
+                    
+                    <div id="probabilities-box" class="probabilities-box">
+                        <h3>Шансы выпадения</h3>
+                        <p>🍎 — 50%</p>
+                        <p>🍌 — 30%</p>
+                        <p>🍒 — 20%</p>
+                    </div>
+                </div>
+
+                <div id="profile-screen" class="content-view hidden">
+                    <div class="back-link" onclick="navigateTo('home')"><i class="fas fa-chevron-left"></i> Назад</div>
+                    <h2>👤 Мой Профиль</h2>
+                    <div class="profile-details-card">
+                        <p><strong>Имя/Логин:</strong> <span id="profile-username"></span></p>
+                        <p><strong>ID в Telegram:</strong> <span id="profile-id"></span></p>
+                        <p><strong>Баланс:</strong> 0.00 руб. (пока неактивно)</p>
+                    </div>
+
+                    <h3>Статистика Кейсов</h3>
+                    <div class="stats-card">
+                        <p>Открыто кейсов: 0</p>
+                        <p>Получено 🍎: 0</p>
+                        <p>Получено 🍌: 0</p>
+                        <p>Получено 🍒: 0</p>
+                    </div>
+
+                    <button onclick="logout()" class="secondary-btn full-width-btn"><i class="fas fa-sign-out-alt"></i> Выйти из аккаунта</button>
+                </div>
+
+            </main>
+        </section>
     </div>
 </body>
 </html>

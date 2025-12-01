@@ -1,4 +1,273 @@
-body { font-family: Arial; text-align: center; padding: 20px; }
-input { padding: 5px; margin: 5px; }
-button { padding: 5px 10px; margin: 5px; }
-.case, .profile { border: 1px solid #333; padding: 10px; margin: 10px auto; width: 200px; }
+:root {
+    --bg-color: #1a1a2e;
+    --card-color: #2c2c44;
+    --text-color: #ffffff;
+    --primary-color: #e94560; /* Ярко-красный для акцента */
+    --secondary-color: #0f3460;
+    --success-color: #38c172;
+    --error-color: #e3342f;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --border-radius: 12px;
+}
+
+/* Общие стили и сброс */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Начинаем сверху, чтобы можно было скроллить */
+    min-height: 100vh;
+}
+
+#app-container {
+    width: 100%;
+    max-width: 450px; /* Ограничение ширины для мобильного приложения */
+    box-shadow: var(--shadow);
+    background-color: var(--bg-color);
+    min-height: 100vh;
+}
+
+.screen {
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- Кнопки и формы --- */
+button {
+    cursor: pointer;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+.primary-btn:hover {
+    background-color: #ff6a80;
+}
+
+.secondary-btn {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+.secondary-btn:hover {
+    background-color: #1a4f8d;
+}
+
+.icon-btn {
+    background: none;
+    border: 1px solid var(--card-color);
+    color: var(--text-color);
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.full-width-btn {
+    width: 100%;
+    margin-top: 15px;
+}
+
+input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    background-color: var(--card-color);
+    color: var(--text-color);
+    box-sizing: border-box;
+}
+
+/* --- Хедер --- */
+#app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: var(--card-color);
+    border-bottom: 1px solid #3c3c54;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.profile-info i {
+    margin-right: 8px;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+/* --- Общий контент --- */
+#app-content {
+    padding: 20px;
+}
+
+.content-view {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.subtitle {
+    color: #b0b0d0;
+    margin-top: -10px;
+    margin-bottom: 25px;
+    font-size: 0.9em;
+}
+
+/* --- Карточки --- */
+.login-card, .case-card, .profile-details-card, .stats-card, .probabilities-box {
+    background-color: var(--card-color);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    text-align: left;
+}
+
+.login-card {
+    text-align: center;
+    margin-top: 40vh; /* Центрируем по вертикали */
+    transform: translateY(-50%);
+}
+
+.error-msg {
+    color: var(--error-color);
+    margin-top: 10px;
+    text-align: center;
+}
+
+.promo-banner {
+    background-color: var(--secondary-color);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.back-link {
+    color: var(--primary-color);
+    cursor: pointer;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+.back-link i { margin-right: 5px; }
+
+
+/* --- Кейс --- */
+.case-card {
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.case-card:hover {
+    transform: translateY(-5px);
+}
+
+.case-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+/* --- Открытие Кейса --- */
+.case-opening-area {
+    overflow: hidden;
+    position: relative;
+    height: 80px;
+    background-color: #131320;
+    border-radius: 8px;
+    border: 2px solid var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.scroll-wrapper {
+    position: relative;
+    height: 100%;
+}
+
+.prize-reel {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    transition: transform 5s cubic-bezier(0.1, 0.9, 0.2, 1); /* Красивая анимация прокрутки */
+    width: max-content;
+}
+
+.prize-item {
+    font-size: 2.5rem;
+    padding: 0 20px;
+    flex-shrink: 0;
+    width: 40px; /* Фиксированная ширина для центрирования */
+    text-align: center;
+}
+
+.indicator {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 100%;
+    background-color: #ffc107;
+    box-shadow: 0 0 10px #ffc107;
+}
+
+.case-result-box {
+    margin-top: 20px;
+    text-align: center;
+    background-color: var(--secondary-color);
+}
+
+.result-emoji-display {
+    font-size: 4rem;
+    margin: 10px 0;
+}
+
+.open-btn {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 15px;
+}
+
+.probabilities-box p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    display: flex;
+    justify-content: space-between;
+}
