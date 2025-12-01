@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <script src="script.js?v=9" defer></script>
+    <script src="script.js?v=10" defer></script>
 </head>
 <body>
     <div id="app-container">
@@ -38,38 +38,21 @@
             </header>
 
             <main id="app-content">
+                
                 <div id="home-screen" class="content-view">
+                    <h2>📦 ГЛАВНАЯ / КЕЙСЫ</h2>
                     
-                    <div id="case-list-container">
-                        <div id="case-list">
-                            <div class="case-card" data-case-id="daily" onclick="navigateTo('case')">
-                                <img src="assets/podarok.png" alt="Кейс Подарок" class="case-img">
-                                <div class="case-price">25 <i class="fas fa-star"></i></div>
-                            </div>
-                            <div class="case-card premium-case" data-case-id="premium">
-                                <img src="assets/mishka.png" alt="Премиум Кейс" class="case-img">
-                                <div class="case-price">100 <i class="fas fa-star"></i></div>
-                            </div>
-                            <div class="case-card promo-case" data-case-id="promo">
-                                <img src="assets/roza.png" alt="Промо Кейс" class="case-img">
-                                <div class="case-price">50 <i class="fas fa-star"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="demo-mode-toggle">
-                        <span class="demo-label">Демо режим</span>
-                        <label class="switch">
-                            <input type="checkbox" id="demo-mode-switch">
-                            <span class="slider round"></span>
-                        </label>
+                    <div class="case-card main-case-card" data-case-id="daily" onclick="navigateTo('case')">
+                        <img src="assets/podarok.png" alt="Кейс Подарок" class="case-img">
+                        <div class="case-price">25 <i class="fas fa-star"></i></div>
+                        <h3>Daily Gift Case</h3>
+                        <p class="case-desc">Нажмите, чтобы открыть кейс</p>
                     </div>
 
-                    <button id="main-open-btn" onclick="openCase()" class="primary-btn full-width-btn big-btn"><i class="fas fa-gift"></i> Получить подарок 25 <i class="fas fa-star"></i></button>
-
-                    <h3 class="prizes-header">ВЫ МОЖЕТЕ ВЫИГРАТЬ</h3>
-                    <div id="winnable-prizes-list">
-                        </div>
+                    <div class="placeholder-card">
+                        <p>В этом разделе будут представлены все доступные кейсы.</p>
+                        <p>Нажмите на карточку выше, чтобы открыть первый кейс!</p>
+                    </div>
                 </div>
 
                 <div id="inventory-screen" class="content-view hidden">
@@ -104,7 +87,7 @@
                 </div>
 
                 <div id="case-screen" class="content-view hidden">
-                    <h2>Daily Free Case</h2>
+                    <h2>Daily Gift Case</h2>
                     
                     <div class="case-opening-area">
                         <div class="scroll-wrapper">
@@ -113,7 +96,20 @@
                         </div>
                     </div>
 
-                    <button id="open-case-btn-roll" onclick="startCaseRoll()" class="primary-btn open-btn"><i class="fas fa-key"></i> КРУТИТЬ (0 <i class="fas fa-star"></i>)</button>
+                    <button id="open-case-btn-roll" onclick="startCaseRoll()" class="primary-btn open-btn big-btn"><i class="fas fa-key"></i> КРУТИТЬ (25 <i class="fas fa-star"></i>)</button>
+                    
+                    <div class="demo-mode-toggle">
+                        <span class="demo-label">Демо режим</span>
+                        <label class="switch">
+                            <input type="checkbox" id="demo-mode-switch">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <h3 class="prizes-header">ВЫ МОЖЕТЕ ВЫИГРАТЬ</h3>
+                    <div id="winnable-prizes-list">
+                        </div>
+
 
                     <div id="case-result-box" class="case-result-box hidden">
                         <h3>🎉 Ваш приз!</h3>

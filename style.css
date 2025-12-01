@@ -130,7 +130,7 @@ input[type="text"] {
     display: flex; 
     align-items: center; 
     font-weight: 700; 
-    background-color: #4CAF50; /* Зеленый для баланса */
+    background-color: #4CAF50; 
     padding: 8px 12px;
     border-radius: 20px;
     font-size: 0.95rem;
@@ -147,7 +147,7 @@ input[type="text"] {
 #app-content { 
     padding: 20px; 
     flex-grow: 1; 
-    padding-bottom: 70px; /* Отступ для навигационной панели */
+    padding-bottom: 70px; 
 }
 
 .login-card, .profile-details-card, .stats-card, .placeholder-card {
@@ -168,41 +168,37 @@ input[type="text"] {
 .light-theme .placeholder-card { color: #555577; }
 
 /* --------------------------------- */
-/* ГЛАВНЫЙ ЭКРАН (CASE STYLE) */
+/* ГЛАВНЫЙ ЭКРАН (КЕЙСЫ) */
 /* --------------------------------- */
 
-/* Контейнер для горизонтальной прокрутки кейсов */
-#case-list-container {
-    overflow-x: scroll;
-    padding: 10px 0;
-    margin: 0 -20px; 
-    -webkit-overflow-scrolling: touch;
-    white-space: nowrap;
-}
-#case-list {
-    display: inline-flex;
-    padding: 0 20px;
-    gap: 15px;
-}
 .case-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100px; 
-    height: 150px;
     background-color: var(--card-color);
     border-radius: var(--border-radius);
-    padding: 10px;
     box-shadow: var(--shadow);
-    flex-shrink: 0;
     cursor: pointer;
-    position: relative;
-    border: 2px solid transparent;
     transition: transform 0.2s, border-color 0.2s;
+    border: 2px solid transparent;
 }
 .case-card:hover { transform: translateY(-5px); }
-.case-card:first-child { border-color: var(--primary-color); } /* Выделение активного/первого кейса */
+
+/* Стиль для одиночной карточки на Главном экране */
+.case-card.main-case-card {
+    display: block;
+    width: 90%; 
+    max-width: 300px;
+    margin: 30px auto; 
+    padding: 30px;
+    text-align: center;
+    border-color: var(--primary-color);
+}
+.case-card.main-case-card h3 {
+    margin-top: 10px;
+    font-size: 1.2rem;
+}
+.case-card.main-case-card .case-desc {
+    font-size: 0.9rem;
+    color: #b0b0d0;
+}
 
 .case-img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 5px; }
 .case-price {
@@ -212,13 +208,16 @@ input[type="text"] {
     font-size: 0.8rem;
     padding: 2px 8px;
     border-radius: 10px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     margin-top: 5px;
 }
 .case-price i { font-size: 0.7rem; margin-left: 4px; }
 
-/* Секция "Вы можете выиграть" */
+
+/* --------------------------------- */
+/* Секция "Вы можете выиграть" (на case-screen) */
+/* --------------------------------- */
 .prizes-header {
     text-align: left;
     margin-top: 25px;
@@ -418,7 +417,7 @@ input:checked + .slider:before { transform: translateX(26px); }
 .prize-item {
     padding: 0 5px;
     flex-shrink: 0;
-    width: 100px; /* Увеличено для картинок */
+    width: 100px; 
     text-align: center;
     height: 100%;
     display: flex;

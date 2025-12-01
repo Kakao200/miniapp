@@ -4,19 +4,17 @@ let currentView = 'login';
 let userBalance = parseFloat(localStorage.getItem('userBalance')) || 1500; // Баланс в звездах
 
 // --- МАССИВ ПРИЗОВ ---
-// 6 предметов. Сумма шансов (prob) = 1.0 (100%)
 const PRIZES = [
-    // Установил более реалистичные названия и цены
-    { id: 'mishka', name: "Мишка", prob: 0.05, cost: 500, image: "mishka.png", rarity: "Legendary" }, // 5%
-    { id: 'podarok', name: "Подарок", prob: 0.10, cost: 200, image: "podarok.png", rarity: "Epic" },  // 10%
-    { id: 'serdce', name: "Сердце", prob: 0.15, cost: 100, image: "serdce.png", rarity: "Rare" },    // 15%
-    { id: 'roza', name: "Роза", prob: 0.20, cost: 50, image: "roza.png", rarity: "Uncommon" },       // 20%
-    { id: 'cvetok', name: "Цветок", prob: 0.25, cost: 25, image: "cvetok.png", rarity: "Common" },    // 25%
-    { id: 'ledenets', name: "Леденец", prob: 0.25, cost: 10, image: "ledenets.png", rarity: "Common" } // 25%
+    { id: 'mishka', name: "Мишка", prob: 0.05, cost: 500, image: "mishka.png", rarity: "Legendary" }, 
+    { id: 'podarok', name: "Подарок", prob: 0.10, cost: 200, image: "podarok.png", rarity: "Epic" },
+    { id: 'serdce', name: "Сердце", prob: 0.15, cost: 100, image: "serdce.png", rarity: "Rare" },
+    { id: 'roza', name: "Роза", prob: 0.20, cost: 50, image: "roza.png", rarity: "Uncommon" },
+    { id: 'cvetok', name: "Цветок", prob: 0.25, cost: 25, image: "cvetok.png", rarity: "Common" },
+    { id: 'ledenets', name: "Леденец", prob: 0.25, cost: 10, image: "ledenets.png", rarity: "Common" }
 ];
 
-const CASE_PRICE = 25; // Цена первого кейса
-const PRIZE_ITEM_WIDTH = 110; // Обновлено в соответствии с CSS
+const CASE_PRICE = 25; 
+const PRIZE_ITEM_WIDTH = 110; 
 const SCROLL_DURATION = 5000; 
 
 // --- Инициализация ---
@@ -33,10 +31,12 @@ window.addEventListener("load", () => {
     
     // Инициализация демо-режима
     const demoMode = localStorage.getItem('demoMode') === 'true';
-    document.getElementById('demo-mode-switch').checked = demoMode;
-    document.getElementById('demo-mode-switch').addEventListener('change', toggleDemoMode);
+    const demoSwitch = document.getElementById('demo-mode-switch');
+    if (demoSwitch) {
+        demoSwitch.checked = demoMode;
+        demoSwitch.addEventListener('change', toggleDemoMode);
+    }
 
-    // Установка цветов для Telegram WebApp
     updateTgColors();
 
     const savedUsername = localStorage.getItem("username");
@@ -44,9 +44,7 @@ window.addEventListener("load", () => {
         username = savedUsername;
         showView('home');
         updateHeaderAndProfile();
-        // Привязка навигационной панели
         document.getElementById('nav-bar').addEventListener('click', handleNavClick);
-        renderWinnablePrizes();
     } else {
         showView('login');
     }
@@ -55,13 +53,11 @@ window.addEventListener("load", () => {
 function updateTgColors() {
     const isLight = document.body.classList.contains("light-theme");
     if (isLight) {
-        // Устанавливаем цвета для светлой темы
-        tg.setHeaderColor('#ffffff'); // Светлый хедер
-        tg.setBackgroundColor('#f0f2f5'); // Светлый фон
+        tg.setHeaderColor('#ffffff'); 
+        tg.setBackgroundColor('#f0f2f5');
     } else {
-        // Устанавливаем цвета для темной темы
-        tg.setHeaderColor('#2c2c44'); // Темный хедер
-        tg.setBackgroundColor('#1a1a2e'); // Темный фон
+        tg.setHeaderColor('#2c2c44'); 
+        tg.setBackgroundColor('#1a1a2e'); 
     }
 }
 
@@ -87,12 +83,16 @@ function toggleDemoMode() {
     const isDemo = document.getElementById('demo-mode-switch').checked;
     localStorage.setItem('demoMode', isDemo);
     
-    const openBtn = document.getElementById('main-open-btn');
-    if (isDemo) {
-        openBtn.textContent = "КРУТИТЬ (Демо)";
-    } else {
-        openBtn.textContent = `Получить подарок ${CASE_PRICE} ⭐️`;
+    const openCaseBtn = document.getElementById("open-case-btn-roll");
+    if (openCaseBtn) {
+        if (isDemo) {
+            openCaseBtn.textContent = "КРУТИТЬ (Демо)";
+        } else {
+            openCaseBtn.innerHTML = `КРУТИТЬ (${CASE_PRICE} <i class="fas fa-star"></i>)`;
+        }
     }
+
+    updateHeaderAndProfile(); 
     tg.HapticFeedback.impactOccurred('light');
 }
 
@@ -126,8 +126,10 @@ function showView(viewName) {
     } else if (viewName === 'case') {
         targetElement = document.getElementById('case-screen');
         resetCaseScreen();
+        renderWinnablePrizes(); // Рендерим призы, когда открываем экран кейса
+        toggleDemoMode(); // Обновляем текст кнопки
     } else if (viewName === 'inventory') {
-        renderInventory();
+        renderInventory(); // Обновляем инвентарь при открытии
     }
     
     if (targetElement) {
@@ -137,6 +139,7 @@ function showView(viewName) {
 
     // Обновление кнопки "Назад" в хедере
     const backButton = document.getElementById('back-button');
+    // Показываем "Назад" на всех экранах, кроме Главного и Входа
     if (viewName === 'home' || viewName === 'login') {
         backButton.classList.add('hidden');
     } else {
@@ -161,7 +164,6 @@ function navigateTo(viewName) {
 function updateHeaderAndProfile() {
     const userId = tg.initDataUnsafe.user?.id || 'N/A';
     
-    // Обновляем баланс в localStorage
     localStorage.setItem('userBalance', userBalance.toFixed(2));
     
     const formattedBalance = userBalance.toFixed(2).replace(/\.00$/, '');
@@ -170,15 +172,6 @@ function updateHeaderAndProfile() {
     document.getElementById("profile-username").textContent = username;
     document.getElementById("profile-id").textContent = userId;
     document.getElementById("profile-balance").innerHTML = `${formattedBalance} <i class="fas fa-star"></i>`;
-
-    const openBtn = document.getElementById('main-open-btn');
-    const isDemo = localStorage.getItem('demoMode') === 'true';
-    if (isDemo) {
-        openBtn.textContent = "КРУТИТЬ (Демо)";
-    } else {
-        openBtn.textContent = `Получить подарок ${CASE_PRICE} ⭐️`;
-    }
-    openBtn.disabled = !isDemo && userBalance < CASE_PRICE;
 }
 
 // --- Вход ---
@@ -194,9 +187,7 @@ function login() {
         localStorage.setItem("username", username);
         updateHeaderAndProfile();
         navigateTo('home');
-        // Привязка навигационной панели после успешного входа
         document.getElementById('nav-bar').addEventListener('click', handleNavClick);
-        renderWinnablePrizes();
     } else {
         msgElem.textContent = "❌ Неверный или неполный код!";
     }
@@ -207,14 +198,13 @@ function logout() {
     localStorage.removeItem("username");
     localStorage.removeItem("theme"); 
     localStorage.removeItem("demoMode"); 
-    // userBalance не сбрасываем, чтобы сохранить прогресс
     username = "";
     showView('login');
     document.getElementById("code-input").value = "";
     tg.close();
 }
 
-// --- Рендер призов на Главном экране ---
+// --- Рендер призов на Экране Кейса ---
 function renderWinnablePrizes() {
     const container = document.getElementById('winnable-prizes-list');
     container.innerHTML = '';
@@ -233,7 +223,7 @@ function renderWinnablePrizes() {
 
         const prob = document.createElement('p');
         prob.classList.add('prize-prob');
-        prob.innerHTML = `${(prize.prob * 100).toFixed(1).replace(/\.0$/, '')}%`; // Шанс с одним знаком после запятой или без
+        prob.innerHTML = `${(prize.prob * 100).toFixed(1).replace(/\.0$/, '')}%`; 
         
         card.appendChild(img);
         card.appendChild(name);
@@ -242,7 +232,7 @@ function renderWinnablePrizes() {
     });
 }
 
-// --- Инвентарь ---
+// --- Инвентарь (логика исправлена) ---
 function getInventory() {
     const inventory = localStorage.getItem('inventory');
     return inventory ? JSON.parse(inventory) : {};
@@ -256,7 +246,9 @@ function saveToInventory(prize) {
         inventory[id].count += 1;
     } else {
         inventory[id] = {
-            ...prize,
+            id: prize.id,
+            name: prize.name,
+            image: prize.image,
             count: 1
         };
     }
@@ -270,11 +262,12 @@ function renderInventory() {
     
     const items = Object.values(inventory).sort((a, b) => b.count - a.count);
 
+    const emptyMessage = document.getElementById('inventory-empty');
     if (items.length === 0) {
-        document.getElementById('inventory-empty').classList.remove('hidden');
+        if (emptyMessage) emptyMessage.classList.remove('hidden');
         return;
     }
-    document.getElementById('inventory-empty').classList.add('hidden');
+    if (emptyMessage) emptyMessage.classList.add('hidden');
 
 
     items.forEach(item => {
@@ -300,12 +293,12 @@ function renderInventory() {
 }
 
 
-// --- Логика Кейса (Обновлено) ---
+// --- Логика Кейса ---
 function createPrizeElement(prize) {
     const item = document.createElement('div');
     item.classList.add('prize-item');
     const img = document.createElement('img');
-    img.src = `assets/${prize.image}`; // Обновлен путь
+    img.src = `assets/${prize.image}`; 
     img.alt = prize.name;
     img.classList.add('prize-image');
     item.appendChild(img);
@@ -315,15 +308,9 @@ function createPrizeElement(prize) {
 function resetCaseScreen() {
     document.getElementById("case-result-box").classList.add('hidden');
     
-    // Кнопка для запуска анимации кручения
     const openCaseBtn = document.getElementById("open-case-btn-roll");
     openCaseBtn.disabled = false;
-    const isDemo = localStorage.getItem('demoMode') === 'true';
-    if (isDemo) {
-        openCaseBtn.textContent = "КРУТИТЬ (Демо)";
-    } else {
-        openCaseBtn.textContent = `КРУТИТЬ (${CASE_PRICE} ⭐️)`;
-    }
+    toggleDemoMode(); // Устанавливаем правильный текст кнопки
     
     const reel = document.getElementById("prize-scroll-reel");
     reel.innerHTML = '';
@@ -348,28 +335,14 @@ function spinPrize() {
     return PRIZES[0];
 }
 
-// Запускается с главного экрана (кнопка "Получить подарок 25")
-function openCase() {
-    // Проверка баланса, если не демо-режим
-    const isDemo = localStorage.getItem('demoMode') === 'true';
-    if (!isDemo && userBalance < CASE_PRICE) {
-        alert("Недостаточно звезд для открытия кейса!");
-        return;
-    }
-    
-    // Переходим на экран кручения
-    showView('case');
-}
-
 
 // Запускается с экрана кручения (кнопка "КРУТИТЬ")
 function startCaseRoll() {
     const isDemo = localStorage.getItem('demoMode') === 'true';
     
-    // Проверка баланса еще раз перед списанием
     if (!isDemo && userBalance < CASE_PRICE) {
-        alert("Недостаточно звезд для открытия кейса!");
-        navigateTo('home');
+        alert("Недостаточно звезд (25 ⭐️) для открытия кейса!");
+        tg.HapticFeedback.notificationOccurred('error');
         return;
     }
     
@@ -380,7 +353,6 @@ function startCaseRoll() {
     const reel = document.getElementById("prize-scroll-reel");
     const winningPrize = spinPrize();
     
-    // Списание баланса (если не демо-режим)
     if (!isDemo) {
         userBalance -= CASE_PRICE;
         updateHeaderAndProfile();
@@ -403,14 +375,12 @@ function startCaseRoll() {
     reel.style.transform = `translateX(-${finalShift}px)`;
 
     setTimeout(() => {
-        // Добавляем в инвентарь (даже в демо, для наглядности)
+        // СОХРАНЕНИЕ В ИНВЕНТАРЬ
         saveToInventory(winningPrize);
         
         document.getElementById("result-emoji").innerHTML = `<img src="assets/${winningPrize.image}" alt="${winningPrize.name}" class="final-prize-image">`;
         document.getElementById("result-msg").textContent = `Поздравляем! Вы выиграли: ${winningPrize.name} (Стоимость: ${winningPrize.cost} ⭐️)!`;
         document.getElementById("case-result-box").classList.remove('hidden');
-        
-        // Кнопка "На Главную" заменит кнопку "КРУТИТЬ" после завершения анимации
         
         tg.HapticFeedback.notificationOccurred('success');
     }, SCROLL_DURATION);
