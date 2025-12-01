@@ -1,63 +1,36 @@
-// Telegram WebApp API
-const tg = window.Telegram.WebApp;
+let username = "";
 
-// Элементы UI
-const loginScreen = document.getElementById("login-screen");
-const mainScreen = document.getElementById("main-screen");
-const caseScreen = document.getElementById("case-screen");
+async function login() {
+    const code = document.getElementById("code-input").value;
+    const res = await fetch(`https://your-server-ip:8080/login?code=${code}`);
+    const data = await res.json();
+    const msg = document.getElementById("login-msg");
 
-const nickname = document.getElementById("nickname");
-const codeInput = document.getElementById("codeInput");
-
-const loginBtn = document.getElementById("loginBtn");
-const openCaseBtn = document.getElementById("openCaseBtn");
-const rollBtn = document.getElementById("rollBtn");
-const backBtn = document.getElementById("backBtn");
-
-// ===== 1. ЛОГИН ЧЕРЕЗ КОД =====
-loginBtn.onclick = () => {
-    const code = codeInput.value.trim();
-
-    if (!code) return alert("Введите код!");
-
-    // Здесь запрос к серверу бота
-    fetch(`https://your-server.com/login?code=${code}`)
-        .then(r => r.json())
-        .then(data => {
-            if (!data.ok) return alert("Неверный код!");
-
-            nickname.textContent = data.username;
-
-            loginScreen.classList.add("hidden");
-            mainScreen.classList.remove("hidden");
-        });
-};
-
-// ===== 2. Переход к кейсу =====
-openCaseBtn.onclick = () => {
-    mainScreen.classList.add("hidden");
-    caseScreen.classList.remove("hidden");
-};
-
-// ===== 3. "Открытие" кейса =====
-rollBtn.onclick = () => {
-    const items = ["😀", "😁", "😂", "😎", "🤩"]; // потом заменишь картинками
-    const weights = [40, 25, 15, 10, 10];
-
-    let sum = weights.reduce((a,b)=>a+b);
-    let r = Math.random() * sum;
-
-    let res;
-    for (let i = 0; i < items.length; i++) {
-        if (r < weights[i]) { res = items[i]; break; }
-        r -= weights[i];
+    if (data.ok) {
+        username = data.username;
+        document.getElementById("username").textContent = username;
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("main-screen").style.display = "block";
+    } else {
+        msg.textContent = "Неверный код!";
     }
+}
 
-    alert("Выпало: " + res);
-};
+function openCase() {
+    document.getElementById("result").style.display = "block";
+    const emojis = ["🍎", "🍌", "🍒"];
+    const probs = [0.5, 0.3, 0.2];
+    let rnd = Math.random();
+    let total = 0;
+    for (let i=0;i<emojis.length;i++){
+        total += probs[i];
+        if(rnd <= total){
+            document.getElementById("emoji").textContent = emojis[i];
+            break;
+        }
+    }
+}
 
-// ===== 4. Назад =====
-backBtn.onclick = () => {
-    caseScreen.classList.add("hidden");
-    mainScreen.classList.remove("hidden");
-};
+function back() {
+    document.getElementById("result").style.display = "none";
+}

@@ -1,40 +1,4 @@
-body {
-    margin: 0;
-    background: #111;
-    color: #fff;
-    font-family: Arial;
-    text-align: center;
-}
-
-#topbar {
-    width: 100%;
-    padding: 15px;
-    background: #222;
-    font-size: 20px;
-    text-align: left;
-}
-
-.screen { padding: 20px; }
-.hidden { display: none; }
-
-.case-box {
-    background: #222;
-    padding: 20px;
-    margin: 20px;
-    border-radius: 12px;
-}
-
-button {
-    padding: 12px 20px;
-    margin-top: 10px;
-    font-size: 18px;
-    border-radius: 8px;
-    border: none;
-    background: #4a8;
-    color: #fff;
-}
-
-.roll-line {
-    font-size: 32px;
-    margin: 20px 0;
-}
+body { font-family: Arial; text-align: center; padding: 20px; }
+input { padding: 5px; margin: 5px; }
+button { padding: 5px 10px; margin: 5px; }
+.case, .profile { border: 1px solid #333; padding: 10px; margin: 10px auto; width: 200px; }
