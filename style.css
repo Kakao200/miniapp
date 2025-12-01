@@ -204,7 +204,7 @@ input[type="text"] {
     margin-bottom: 10px;
 }
 
-/* --- Открытие Кейса --- */
+/* --- Открытие Кейса (Лента) --- */
 .case-opening-area {
     overflow: hidden;
     position: relative;
@@ -230,11 +230,14 @@ input[type="text"] {
 }
 
 .prize-item {
-    font-size: 2.5rem;
-    padding: 0 20px;
+    padding: 0 10px;
     flex-shrink: 0;
-    width: 40px; /* Фиксированная ширина для центрирования */
+    width: 60px; 
     text-align: center;
+    height: 100%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .indicator {
@@ -254,10 +257,42 @@ input[type="text"] {
     background-color: var(--secondary-color);
 }
 
-.result-emoji-display {
-    font-size: 4rem;
-    margin: 10px 0;
+/* Стили для картинок призов в ленте */
+.prize-image {
+    width: 60px;  /* Размер картинки в ленте */
+    height: 60px; 
+    object-fit: contain; /* Сохраняем пропорции */
 }
+
+/* Стили для картинки в финальном результате */
+.result-emoji-display {
+    margin: 10px 0;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.final-prize-image {
+    width: 90px;   /* Большой размер для результата */
+    height: 90px;
+    object-fit: contain;
+    /* Анимация победы */
+    animation: prizeGlow 1.5s infinite alternate; 
+}
+
+/* Анимация свечения для победного приза */
+@keyframes prizeGlow {
+    from {
+        filter: drop-shadow(0 0 5px rgba(233, 69, 96, 0.5));
+        transform: scale(1);
+    }
+    to {
+        filter: drop-shadow(0 0 15px var(--primary-color));
+        transform: scale(1.05);
+    }
+}
+
 
 .open-btn {
     width: 100%;
@@ -271,3 +306,4 @@ input[type="text"] {
     display: flex;
     justify-content: space-between;
 }
+
