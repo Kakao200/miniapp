@@ -1,111 +1,64 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⭐ Quick Gift App</title>
+    <title>⭐ Gift App</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <link rel="stylesheet" href="style.css">
-    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
-    <!-- Важно: используем v=11 для сброса кеша скрипта! -->
-    <script src="script.js?v=11" defer></script>
+    <script src="script.js?v=12" defer></script>
 </head>
 <body>
     <div id="app-container">
         
-        <!-- 1. ЭКРАН ВХОДА (ЛОГИН) -->
+        <!-- ЭКРАН ВХОДА -->
         <section id="login-screen" class="app-screen">
             <div class="login-card content-section">
                 <h2>🔑 Вход</h2>
                 <p>Введите код, полученный от бота:</p>
                 <input type="text" id="code-input" placeholder="Пятизначный код" maxlength="5">
-                <button id="login-btn" class="main-action-btn">11Войти</button>
+                <button id="login-btn" class="main-action-btn">Войти</button>
                 <p id="login-msg" class="error-msg"></p>
             </div>
         </section>
 
-        <!-- 2. ОСНОВНОЙ ЭКРАН (НОВЫЙ ДИЗАЙН) -->
+        <!-- ОСНОВНОЙ ЭКРАН -->
         <section id="main-app-screen" class="app-screen hidden">
             
-            <div id="top-stars-panel">
-                <div class="star-balance-item">
-                    <img src="assets/star.png" alt="Star" class="star-icon">
-                    <span id="star-balance-1">25</span>
-                </div>
-                <div class="star-balance-item">
-                    <img src="assets/star.png" alt="Star" class="star-icon">
-                    <span id="star-balance-2">50</span>
-                </div>
-                <div class="star-balance-item">
-                    <img src="assets/star.png" alt="Star" class="star-icon">
-                    <span id="star-balance-3">100</span>
-                </div>
-            </div>
-
+            <!-- Верхняя панель -->
             <header id="app-header">
-                <i class="fas fa-times close-icon"></i>
-                <h1>Quick Gift</h1>
-                <i class="fas fa-chevron-down dropdown-icon"></i>
+                <div class="balance-section">
+                    <div class="balance-item">
+                        <img src="assets/star.png" alt="Star" class="star-icon">
+                        <span id="star-balance">1000</span>
+                    </div>
+                </div>
+                <h1>Gift App</h1>
+                <div class="theme-toggle">
+                    <i class="fas fa-moon" id="theme-switcher"></i>
+                </div>
             </header>
 
+            <!-- Основной контент -->
             <main id="app-content">
-                <div id="quick-gift-section" class="content-section">
-                    <div class="gift-options-grid">
-                        <div class="gift-card" data-cost="100">
-                            <img src="assets/cup.png" alt="Кубок">
-                            <div class="gift-cost">
-                                <img src="assets/star.png" alt="Star">
-                                <span>100</span>
-                            </div>
-                        </div>
-                        <div class="gift-card selected" data-cost="25">
-                            <img src="assets/giftbox.png" alt="Подарок">
-                            <div class="gift-cost">
-                                <img src="assets/star.png" alt="Star">
-                                <span>25</span>
-                            </div>
-                        </div>
-                        <div class="gift-card" data-cost="25">
-                            <img src="assets/rose.png" alt="Роза">
-                            <div class="gift-cost">
-                                <img src="assets/star.png" alt="Star">
-                                <span>25</span>
-                            </div>
-                        </div>
+                <div class="case-section">
+                    <div class="case-image">
+                        <img src="assets/gift_case.png" alt="Кейс с подарками" id="case-img">
                     </div>
-
-                    <div class="demo-mode-toggle">
-                        <span>Демо режим</span>
-                        <label class="switch">
-                            <input type="checkbox" id="demo-mode-checkbox">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-
-                    <button id="get-gift-btn" class="main-action-btn">
-                        Получить подарок <img src="assets/star.png" alt="Star"> <span id="gift-cost-display">25</span>
+                    <button id="open-case-btn" class="main-action-btn">
+                        Открыть за <img src="assets/star.png" alt="Star"> <span id="case-cost">25</span>
                     </button>
                 </div>
-
-                <!-- СЕКЦИЯ ШАНСОВ (Будет заполнена динамически через JS) -->
-                <div id="possible-wins-section" class="content-section">
-                    <h2>ВЫ МОЖЕТЕ ВЫИГРАТЬ</h2>
-                    <div class="possible-wins-grid">
-                        <!-- Контент призов с шансами будет вставлен сюда JS -->
-                    </div>
-                </div>
-
             </main>
 
             <!-- Нижняя навигация -->
             <nav id="bottom-nav">
-                <a href="#" class="nav-item active" data-nav="gifts">
+                <a href="#" class="nav-item active" data-nav="main">
                     <i class="fas fa-gift"></i>
-                    <span>Подарки</span>
+                    <span>Главная</span>
                 </a>
                 <a href="#" class="nav-item" data-nav="raffles">
                     <i class="fas fa-trophy"></i>
@@ -121,19 +74,35 @@
                 </a>
             </nav>
         </section>
-        
-        <!-- 3. ЭКРАН РЕЗУЛЬТАТА -->
+
+        <!-- ЭКРАН ОТКРЫТИЯ КЕЙСА -->
+        <section id="case-screen" class="app-screen hidden">
+            <div class="case-opening-container">
+                <div class="prizes-grid" id="prizes-grid">
+                    <!-- Призы будут добавлены через JS -->
+                </div>
+                <div class="opening-animation" id="opening-animation">
+                    <div class="spinning-prize">
+                        <img id="spinning-prize-img" src="" alt="Приз">
+                    </div>
+                </div>
+                <button id="open-now-btn" class="main-action-btn">Открыть сейчас</button>
+            </div>
+        </section>
+
+        <!-- ЭКРАН РЕЗУЛЬТАТА -->
         <section id="result-screen" class="app-screen hidden">
             <div class="content-section result-card">
-                <i class="fas fa-gift fa-4x mb-4 text-primary-blue"></i>
-                <h2>🎉 Вы выиграли: <span class="prize-text"></span></h2>
-                <span class="prize-cost-display"></span>
-                <button id="result-back-btn" class="main-action-btn mt-4">Закрыть</button>
+                <div class="prize-result">
+                    <img id="won-prize-img" src="" alt="Выигранный приз">
+                    <h2>🎉 Вы выиграли!</h2>
+                    <p class="prize-name" id="won-prize-name"></p>
+                    <p class="prize-value">Стоимость: <span id="won-prize-value"></span> <img src="assets/star.png" alt="Star" class="star-icon-small"></p>
+                </div>
+                <button id="result-back-btn" class="main-action-btn">На главную</button>
             </div>
         </section>
 
     </div>
 </body>
 </html>
-
-

@@ -1,18 +1,27 @@
+/* style.css */
 :root {
-    --bg-color: #f0f2f5; /* Светлый фон */
+    --bg-color: #f0f2f5;
     --card-bg-color: #ffffff;
     --text-color-dark: #333333;
     --text-color-light: #666666;
-    --primary-blue: #007bff; /* Основной синий */
-    --accent-yellow: #ffc107; /* Желтый для звезд */
+    --primary-blue: #007bff;
+    --accent-yellow: #ffc107;
     --border-color: #e0e0e0;
     --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.08);
     --border-radius-base: 12px;
     --border-radius-sm: 8px;
-    --error-color: #e3342f; /* Красный для ошибок */
+    --error-color: #e3342f;
 }
 
-/* Общие стили и сброс */
+.dark-theme {
+    --bg-color: #1a1a1a;
+    --card-bg-color: #2d2d2d;
+    --text-color-dark: #ffffff;
+    --text-color-light: #cccccc;
+    --border-color: #404040;
+    --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
 body {
     font-family: 'Inter', sans-serif;
     background-color: var(--bg-color);
@@ -21,13 +30,14 @@ body {
     padding: 0;
     display: flex;
     justify-content: center;
-    align-items: flex-start; 
+    align-items: flex-start;
     min-height: 100vh;
+    transition: all 0.3s ease;
 }
 
 #app-container {
     width: 100%;
-    max-width: 450px; 
+    max-width: 450px;
     background-color: var(--bg-color);
     min-height: 100vh;
     box-shadow: var(--shadow-light);
@@ -35,10 +45,9 @@ body {
     flex-direction: column;
 }
 
-/* Управление видимостью экранов */
 .app-screen {
     width: 100%;
-    flex-grow: 1; 
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
@@ -46,7 +55,6 @@ body {
     display: none !important;
 }
 
-/* --- Стили для ЭКРАНА ВХОДА --- */
 #login-screen {
     justify-content: center;
     align-items: center;
@@ -77,6 +85,8 @@ body {
     box-sizing: border-box;
     text-align: center;
     font-size: 1.1em;
+    background-color: var(--card-bg-color);
+    color: var(--text-color-dark);
 }
 
 .error-msg {
@@ -85,78 +95,6 @@ body {
     margin-top: 10px;
 }
 
-
-/* --- Стили для ЭКРАНА РЕЗУЛЬТАТА --- */
-#result-screen {
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    text-align: center;
-}
-
-.result-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 40px 20px;
-    width: 90%;
-}
-
-.result-card h2 {
-    font-size: 1.4em;
-    margin-top: 20px;
-}
-
-.result-card .prize-text {
-    font-weight: 700;
-    color: var(--primary-blue);
-    display: block;
-    margin-top: 5px;
-}
-
-.prize-cost-display {
-    display: flex;
-    align-items: center;
-    font-size: 1.1em;
-    color: var(--text-color-light);
-    margin-top: 15px;
-}
-
-.star-icon-small {
-    width: 20px;
-    height: 20px;
-    margin-left: 5px;
-}
-
-/* --- Верхняя панель со звёздами --- */
-#top-stars-panel {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 0;
-    background-color: var(--card-bg-color);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.star-balance-item {
-    display: flex;
-    align-items: center;
-    background-color: var(--bg-color);
-    border-radius: var(--border-radius-sm);
-    padding: 5px 10px;
-    font-weight: 600;
-    color: var(--text-color-dark);
-    font-size: 0.9em;
-}
-
-.star-icon {
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
-}
-
-/* --- Хедер --- */
 #app-header {
     display: flex;
     justify-content: space-between;
@@ -173,138 +111,59 @@ body {
     color: var(--text-color-dark);
 }
 
-.close-icon, .dropdown-icon {
+.balance-section {
+    display: flex;
+    align-items: center;
+}
+
+.balance-item {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-color);
+    border-radius: var(--border-radius-sm);
+    padding: 8px 12px;
+    font-weight: 600;
+    color: var(--text-color-dark);
+}
+
+.star-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+}
+
+.theme-toggle {
+    cursor: pointer;
     font-size: 1.2em;
     color: var(--text-color-light);
-    cursor: pointer;
+    padding: 8px;
 }
 
-/* --- Основной контент --- */
 #app-content {
     flex-grow: 1;
-    padding: 15px;
-    overflow-y: auto; 
-}
-
-.content-section {
-    background-color: var(--card-bg-color);
-    border-radius: var(--border-radius-base);
-    padding: 15px;
-    margin-bottom: 15px;
-    box-shadow: var(--shadow-light);
-}
-
-/* --- Quick Gift Section --- */
-.gift-options-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.gift-card {
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    padding: 10px;
-    border-radius: var(--border-radius-sm);
-    border: 1px solid var(--border-color);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
+    align-items: center;
 }
 
-.gift-card.selected {
-    border-color: var(--primary-blue);
-    background-color: rgba(0, 123, 255, 0.08); 
+.case-section {
+    text-align: center;
+    width: 100%;
 }
 
-.gift-card img {
-    width: 70px;
-    height: 70px;
+.case-image img {
+    width: 200px;
+    height: 200px;
     object-fit: contain;
-    margin-bottom: 5px;
-}
-
-.gift-cost {
-    display: flex;
-    align-items: center;
-    background-color: var(--primary-blue);
-    color: #ffffff;
-    border-radius: var(--border-radius-sm);
-    padding: 3px 8px;
-    font-size: 0.8em;
-    font-weight: 500;
-}
-
-.gift-cost .star-icon {
-    width: 14px;
-    height: 14px;
-    margin-right: 3px;
-    /* Убедимся, что звезды на темном фоне выглядят хорошо */
-    filter: drop-shadow(0 0 1px #000); 
-}
-
-/* --- Демо режим --- */
-.demo-mode-toggle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
     margin-bottom: 20px;
-    color: var(--text-color-light);
 }
 
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 24px;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 24px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background-color: var(--primary-blue);
-}
-
-input:checked + .slider:before {
-    transform: translateX(16px);
-}
-
-/* --- Кнопка "Получить подарок" --- */
 .main-action-btn {
     width: 100%;
-    padding: 12px 20px;
+    max-width: 300px;
+    padding: 15px 20px;
     border-radius: var(--border-radius-base);
     background-color: var(--primary-blue);
     color: #ffffff;
@@ -314,96 +173,128 @@ input:checked + .slider:before {
     justify-content: center;
     align-items: center;
     gap: 8px;
-    margin-top: 20px;
     border: none;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
-.main-action-btn:hover:not(:disabled) {
+.main-action-btn:hover {
     background-color: #0056b3;
-}
-.main-action-btn:disabled {
-    background-color: #a0c4f1;
-    cursor: not-allowed;
 }
 
 .main-action-btn img {
     width: 20px;
     height: 20px;
-    filter: brightness(1.2);
 }
 
-/* --- Секция "Вы МОЖЕТЕ ВЫИГРАТЬ" (Шансы) --- */
-#possible-wins-section h2 {
-    font-size: 1.1em;
-    font-weight: 600;
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: var(--text-color-dark);
+#case-screen {
+    padding: 20px;
 }
 
-.possible-wins-grid {
+.case-opening-container {
+    text-align: center;
+}
+
+.prizes-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+    margin-bottom: 20px;
 }
 
-.win-item {
+.prize-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 10px;
     border-radius: var(--border-radius-sm);
     border: 1px solid var(--border-color);
-    position: relative;
-    background-color: var(--bg-color); /* Более светлый фон внутри сетки */
+    background-color: var(--card-bg-color);
 }
 
-.win-item img {
-    width: 70px;
-    height: 70px;
+.prize-item img {
+    width: 60px;
+    height: 60px;
     object-fit: contain;
     margin-bottom: 5px;
 }
 
-.win-chance {
+.prize-stars {
     display: flex;
     align-items: center;
-    background-color: var(--card-bg-color); 
-    color: var(--text-color-dark);
+    background-color: var(--primary-blue);
+    color: #ffffff;
     border-radius: var(--border-radius-sm);
     padding: 3px 8px;
-    font-size: 0.7em;
-    font-weight: 500;
-    margin-bottom: 5px;
-}
-.win-chance .star-icon {
-    width: 12px;
-    height: 12px;
-    margin-right: 3px;
-}
-
-.win-percentage {
     font-size: 0.8em;
     font-weight: 500;
-    color: var(--text-color-light);
 }
 
+.opening-animation {
+    margin: 30px 0;
+    padding: 20px;
+    background-color: var(--card-bg-color);
+    border-radius: var(--border-radius-base);
+}
 
-/* --- Нижняя навигация --- */
+.spinning-prize img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+
+#result-screen {
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.result-card {
+    text-align: center;
+    padding: 30px;
+    width: 90%;
+    max-width: 300px;
+}
+
+.prize-result img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+
+.prize-name {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: var(--primary-blue);
+    margin: 10px 0;
+}
+
+.prize-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 1.1em;
+    color: var(--text-color-light);
+    margin: 10px 0;
+}
+
+.star-icon-small {
+    width: 18px;
+    height: 18px;
+}
+
 #bottom-nav {
     display: flex;
     justify-content: space-around;
     padding: 10px 0;
     background-color: var(--card-bg-color);
     border-top: 1px solid var(--border-color);
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
-    position: sticky; 
+    position: sticky;
     bottom: 0;
     width: 100%;
     max-width: 450px;
-    margin-top: auto; 
 }
 
 .nav-item {
@@ -424,9 +315,5 @@ input:checked + .slider:before {
 }
 
 .nav-item.active {
-    color: var(--primary-blue);
-}
-
-.nav-item:hover {
     color: var(--primary-blue);
 }

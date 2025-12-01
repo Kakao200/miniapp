@@ -1,3 +1,4 @@
+# bot.py
 import random
 import asyncio
 from aiogram import Bot, Dispatcher, types
@@ -10,7 +11,6 @@ WEBAPP_URL = "https://Kakao200.github.io/miniapp/"
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# =================== /start ===================
 @dp.message(Command("start"))
 async def cmd_start(msg: types.Message):
     code = str(random.randint(10000, 99999))
@@ -29,7 +29,6 @@ async def cmd_start(msg: types.Message):
         reply_markup=kb
     )
 
-# =================== Запуск ===================
 async def main():
     await dp.start_polling(bot)
 
