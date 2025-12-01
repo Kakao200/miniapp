@@ -1,6 +1,13 @@
 let username = "";
 
-// Вход по коду
+// Проверяем, есть ли код в localStorage
+window.onload = function() {
+    const savedCode = localStorage.getItem("userCode");
+    if (savedCode) {
+        loginWithCode(savedCode);
+    }
+};
+
 function login() {
     const code = document.getElementById("code-input").value.trim();
     const msgElem = document.getElementById("login-msg");
@@ -11,14 +18,21 @@ function login() {
         return;
     }
 
+    // Сохраняем код в localStorage
+    localStorage.setItem("userCode", code);
+
+    loginWithCode(code);
+}
+
+function loginWithCode(code) {
     // Отправка кода боту через Telegram WebApp
     Telegram.WebApp.sendData(code);
 
-    // После отправки можно закрыть экран входа (опционально)
+    // Показываем главный экран
     document.getElementById("login-screen").style.display = "none";
     document.getElementById("main-screen").style.display = "block";
 
-    // username бот пришлёт через Telegram чат, пока мы можем показать просто "Вы вошли"
+    // Пока что показываем username/id заглушкой
     username = "Вы вошли!";
     document.getElementById("username").textContent = username;
 }
@@ -44,4 +58,11 @@ function openCase() {
 // Кнопка "Назад" из результата
 function back() {
     document.getElementById("result").style.display = "none";
+}
+
+// Кнопка "Выйти" (опционально)
+function logout() {
+    localStorage.removeItem("userCode");
+    document.getElementById("main-screen").style.display = "none";
+    document.getElementById("login-screen").style.display = "block";
 }
