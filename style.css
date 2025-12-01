@@ -98,6 +98,12 @@ input[type="number"], input[type="text"] {
     top: 0;
     z-index: 10;
 }
+/* Анимация пульсации для баланса */
+@keyframes balancePulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+}
 .header-balance-info { 
     display: flex; 
     align-items: center; 
@@ -107,6 +113,7 @@ input[type="number"], input[type="text"] {
     padding: 8px 12px;
     border-radius: 20px;
     font-size: 0.95rem;
+    animation: balancePulse 2s infinite; /* Добавление пульсации */
 }
 .header-balance-info i { margin-right: 8px; color: var(--secondary-color); }
 
@@ -202,6 +209,12 @@ input[type="number"], input[type="text"] {
     flex-direction: column;
     gap: 20px;
 }
+/* Анимация тряски при краше */
+@keyframes shake {
+    0%, 100% { transform: translate(0, 0); }
+    10%, 30%, 50%, 70%, 90% { transform: translate(-2px, 0); }
+    20%, 40%, 60%, 80% { transform: translate(2px, 0); }
+}
 .graph-area {
     position: relative;
     height: 300px;
@@ -215,6 +228,23 @@ input[type="number"], input[type="text"] {
     flex-direction: column;
     border: 1px solid var(--secondary-color);
 }
+.graph-area.crashed-shake {
+    animation: shake 0.5s ease-in-out;
+}
+.rocket-graph-svg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+#multiplier-line {
+    stroke: var(--primary-color);
+    stroke-width: 3;
+    filter: drop-shadow(0 0 5px var(--primary-color));
+}
+
 .rocket-multiplier {
     font-size: 3rem;
     font-weight: 700;
@@ -234,6 +264,7 @@ input[type="number"], input[type="text"] {
     bottom: 20px;
     color: #b0b0d0;
     font-size: 1em;
+    z-index: 5;
 }
 
 /* Имитация ракеты и пути */
@@ -242,18 +273,10 @@ input[type="number"], input[type="text"] {
     width: 60px;
     height: 120px;
     bottom: 0;
-    left: 10%; /* Начальная позиция */
+    left: 0; 
     transform-origin: bottom center;
     z-index: 4;
-    transition: all 0.1s linear; /* Плавность для начальной анимации */
-}
-.rocket-path {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 10% 90%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    transition: all 0.1s linear; /* Плавность для анимации */
 }
 
 
@@ -269,6 +292,11 @@ input[type="number"], input[type="text"] {
     flex-grow: 1;
     background-color: var(--secondary-color);
     padding: 10px;
+    border: 2px solid transparent;
+}
+.bet-amount-btn.active {
+    border: 2px solid var(--primary-color);
+    background-color: #1a3c63;
 }
 
 .last-round-info {
@@ -282,7 +310,7 @@ input[type="number"], input[type="text"] {
 }
 
 /* --------------------------------- */
-/* ЭКРАН КЕЙСА (ПОВТОР) */
+/* ЭКРАН КЕЙСА */
 /* --------------------------------- */
 .case-opening-area {
     overflow: hidden;
@@ -321,6 +349,7 @@ input[type="number"], input[type="text"] {
     height: 100%;
     background-color: var(--star-color);
     box-shadow: 0 0 10px var(--star-color);
+    z-index: 5;
 }
 .prize-image {
     width: 60px;
@@ -344,8 +373,23 @@ input[type="number"], input[type="text"] {
     from { filter: drop-shadow(0 0 5px rgba(33, 150, 243, 0.5)); transform: scale(1); }
     to { filter: drop-shadow(0 0 15px var(--primary-color)); transform: scale(1.05); }
 }
-.open-btn { width: 100%; font-size: 1.1rem; padding: 15px; }
+.case-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.open-btn { flex-grow: 1; font-size: 1.1rem; padding: 15px; }
+.small-btn { padding: 12px 15px; font-size: 0.9rem; }
+
 .probabilities-box { margin-top: 20px; }
+.probabilities-box h3 {
+    text-align: center;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--secondary-color);
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
 .probabilities-box p {
     margin: 5px 0;
     font-size: 0.9em;

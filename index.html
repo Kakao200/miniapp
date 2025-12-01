@@ -6,10 +6,10 @@
     <title>⚡️ Mini-App Case</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <script src="script.js?v=11" defer></script>
+    <script src="script.js?v=12" defer></script>
 </head>
 <body>
     <div id="app-container">
@@ -55,9 +55,11 @@
                 <div id="rocket-screen" class="content-view hidden">
                     <div class="rocket-game-area">
                         <div id="graph-area" class="graph-area">
+                            <svg id="rocket-graph-svg" class="rocket-graph-svg">
+                                <polyline id="multiplier-line" fill="none" stroke="#2196F3" stroke-width="3" />
+                            </svg>
                             <div id="rocket-multiplier" class="rocket-multiplier">x1.00</div>
                             <img id="rocket-image" src="assets/rocket.png" alt="Ракета" class="rocket-image hidden">
-                            <div id="rocket-path" class="rocket-path"></div>
                             <div id="rocket-info" class="rocket-info">Нажмите "Ставка" для начала</div>
                         </div>
                         
@@ -68,15 +70,15 @@
                         <div class="bet-controls">
                             <h3>Сделайте вашу ставку</h3>
                             <div class="bet-quick-select">
-                                <button class="secondary-btn bet-amount-btn" data-bet="5">5 ⭐</button>
+                                <button class="secondary-btn bet-amount-btn active" data-bet="5">5 ⭐</button>
                                 <button class="secondary-btn bet-amount-btn" data-bet="25">25 ⭐</button>
                                 <button class="secondary-btn bet-amount-btn" data-bet="100">100 ⭐</button>
                             </div>
 
-                            <input type="number" id="bet-input" placeholder="Введите свою ставку" value="25" min="5" max="1000">
+                            <input type="number" id="bet-input" placeholder="Введите свою ставку" value="5" min="5" max="1000">
 
                             <button id="rocket-action-btn" onclick="startRocketGame()" class="primary-btn open-btn big-btn">
-                                <i class="fas fa-rocket"></i> СДЕЛАТЬ СТАВКУ (25 ⭐)
+                                <i class="fas fa-rocket"></i> СДЕЛАТЬ СТАВКУ (5.00 ⭐)
                             </button>
                         </div>
                     </div>
@@ -94,7 +96,11 @@
                         </div>
                     </div>
 
-                    <button id="open-case-btn" onclick="openCase()" class="primary-btn open-btn big-btn"><i class="fas fa-key"></i> ОТКРЫТЬ (0 руб)</button>
+                    <div class="case-buttons">
+                        <button id="demo-case-btn" onclick="openCase(true)" class="secondary-btn small-btn"><i class="fas fa-redo"></i> ДЕМО РЕЖИМ</button>
+                        
+                        <button id="open-case-btn" onclick="openCase(false)" class="primary-btn open-btn big-btn"><i class="fas fa-key"></i> ОТКРЫТЬ (25 ⭐)</button>
+                    </div>
 
                     <div id="case-result-box" class="case-result-box hidden">
                         <h3>🎉 Ваш приз!</h3>
@@ -103,7 +109,7 @@
                     </div>
                     
                     <div id="probabilities-box" class="probabilities-box">
-                        <h3>Шансы выпадения</h3>
+                        <h3>ВЫ МОЖЕТЕ ВЫИГРАТЬ:</h3>
                         <p>🐻 Мишка — 30%</p>  
                         <p>❤️ Сердце — 25%</p>   
                         <p>🌹 Роза — 20%</p>   

@@ -2,6 +2,7 @@ let username = "";
 let tg = window.Telegram.WebApp;
 let currentView = 'login'; 
 let currentMode = 'home'; // 'home' (Кейсы) или 'rocket'
+// Устанавливаем начальный баланс 1000, если нет сохраненного значения
 let userBalance = parseFloat(localStorage.getItem('userBalance')) || 1000; 
 
 // Логика игры "Ракета"
@@ -9,7 +10,12 @@ let isRocketGameActive = false;
 let rocketInterval;
 let crashTimeout;
 let multiplier = 1.00;
-const INITIAL_ROCKET_Y = 280; // Начальная позиция ракеты (снизу)
+let points = "0,300"; // Начальная точка для SVG графика (X=0, Y=300)
+const GRAPH_WIDTH = 450; 
+const GRAPH_HEIGHT = 300; 
+const X_SCALE = 40; // Масштаб по X: 1x = 40px
+const Y_SCALE = 50; // Масштаб по Y: 1x = 50px (инвертирован)
+let currentBet = 5.00; // Начальная ставка по умолчанию
 
 // --- МАССИВ ПРИЗОВ ---
 // Обновленные шансы: Мишка и Сердце - самые частые. Леденец и Цветок - самые редкие.
@@ -24,7 +30,6 @@ const PRIZES = [
 
 const PRIZE_ITEM_WIDTH = 80; 
 const SCROLL_DURATION = 5000; 
-const BET_OPTIONS = [5, 25, 100];
 
 
 // --- Инициализация ---
@@ -32,7 +37,6 @@ window.addEventListener("load", () => {
     tg.ready();
     tg.expand();
     
-    // Инициализация нижней навигации
     document.getElementById('nav-bar').addEventListener('click', handleNavClick);
     
     updateTgColors();
@@ -42,28 +46,27 @@ window.addEventListener("load", () => {
         username = savedUsername;
         showView('home');
         updateHeaderAndProfile();
-        // Привязка кнопок ставок
+        // Инициализация ставок
         document.querySelectorAll('.bet-amount-btn').forEach(btn => {
             btn.addEventListener('click', setBetAmount);
         });
         document.getElementById('bet-input').addEventListener('input', updateActionButtonText);
+        document.getElementById('bet-input').value = currentBet.toFixed(2);
+        updateActionButtonText();
     } else {
         showView('login');
     }
 });
 
 function updateTgColors() {
-    // Используем стандартные цвета Telegram
     tg.setHeaderColor(tg.themeParams.secondary_bg_color);
     tg.setBackgroundColor(tg.themeParams.bg_color);
 }
 
-// --- Обработка кликов в навигации ---
 function handleNavClick(event) {
     const navItem = event.target.closest('.nav-item');
     if (navItem) {
         const viewName = navItem.getAttribute('data-view');
-        // Обновляем текущий режим в соответствии с нажатой кнопкой
         if (viewName === 'home') currentMode = 'home';
         if (viewName === 'rocket') currentMode = 'rocket';
         
@@ -71,7 +74,6 @@ function handleNavClick(event) {
     }
 }
 
-// --- Переключение режимов (Кейсы/Ракета) ---
 function navigateToMode(mode) {
     currentMode = mode;
     
@@ -87,7 +89,6 @@ function navigateToMode(mode) {
     }
 }
 
-// --- Навигация ---
 function showView(viewName) {
     const screens = document.querySelectorAll('.screen');
     screens.forEach(s => s.classList.add('hidden'));
@@ -108,7 +109,6 @@ function showView(viewName) {
         currentView = viewName;
     }
 
-    // Обновление активного элемента в нав-баре
     document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.remove('active');
         if (item.getAttribute('data-view') === viewName) {
@@ -116,7 +116,6 @@ function showView(viewName) {
         }
     });
 
-    // Дополнительная логика для режима
     if (viewName === 'home' || viewName === 'rocket') {
         const modeBtn = viewName === 'home' ? 'mode-cases' : 'mode-rocket';
         document.getElementById('mode-cases').classList.remove('active');
@@ -128,9 +127,9 @@ function showView(viewName) {
 function navigateTo(viewName) {
     showView(viewName);
     if (viewName === 'profile') updateHeaderAndProfile();
+    if (viewName === 'case') resetCaseScreen();
 }
 
-// --- Данные пользователя ---
 function updateHeaderAndProfile() {
     const userId = tg.initDataUnsafe.user?.id || 'N/A';
     
@@ -145,7 +144,6 @@ function updateHeaderAndProfile() {
     updateActionButtonText();
 }
 
-// --- Вход ---
 function login() {
     const code = document.getElementById("code-input").value.trim();
     const msgElem = document.getElementById("login-msg");
@@ -163,7 +161,6 @@ function login() {
     }
 }
 
-// --- Выход ---
 function logout() {
     localStorage.removeItem("username");
     localStorage.removeItem("userBalance");
@@ -190,6 +187,7 @@ function resetCaseScreen() {
     document.getElementById("case-result-box").classList.add('hidden');
     document.getElementById("open-case-btn").disabled = false;
     document.getElementById("open-case-btn").innerHTML = '<i class="fas fa-key"></i> ОТКРЫТЬ (25 <i class="fas fa-star"></i>)';
+    document.getElementById("demo-case-btn").disabled = false;
 
     const reel = document.getElementById("prize-scroll-reel");
     reel.innerHTML = '';
@@ -213,19 +211,23 @@ function spinPrize() {
     return PRIZES[0];
 }
 
-function openCase() {
+function openCase(isDemo = false) {
     const CASE_PRICE = 25;
-    if (userBalance < CASE_PRICE) {
+    if (!isDemo && userBalance < CASE_PRICE) {
         alert("Недостаточно звезд!");
         tg.HapticFeedback.notificationOccurred('error');
         return;
     }
     
-    userBalance -= CASE_PRICE;
-    updateHeaderAndProfile();
+    if (!isDemo) {
+        userBalance -= CASE_PRICE;
+        updateHeaderAndProfile();
+    }
     
     document.getElementById("open-case-btn").disabled = true;
+    document.getElementById("demo-case-btn").disabled = true;
     document.getElementById("open-case-btn").textContent = "Крутим...";
+    document.getElementById("demo-case-btn").textContent = "Крутим...";
     document.getElementById("case-result-box").classList.add('hidden');
     
     const reel = document.getElementById("prize-scroll-reel");
@@ -247,10 +249,14 @@ function openCase() {
 
     setTimeout(() => {
         document.getElementById("result-emoji").innerHTML = `<img src="${winningPrize.image}" alt="${winningPrize.name}" class="final-prize-image">`;
-        document.getElementById("result-msg").textContent = `Поздравляем! Вы выиграли: ${winningPrize.name}!`;
+        document.getElementById("result-msg").textContent = `Поздравляем! Вы выиграли: ${winningPrize.name}! ${isDemo ? '(ДЕМО)' : ''}`;
         document.getElementById("case-result-box").classList.remove('hidden');
+        
         document.getElementById("open-case-btn").disabled = false;
+        document.getElementById("demo-case-btn").disabled = false;
         document.getElementById("open-case-btn").innerHTML = 'ОТКРЫТЬ СНОВА (25 <i class="fas fa-star"></i>)';
+        document.getElementById("demo-case-btn").innerHTML = '<i class="fas fa-redo"></i> ДЕМО РЕЖИМ';
+        
         tg.HapticFeedback.notificationOccurred('success');
     }, SCROLL_DURATION);
 }
@@ -258,21 +264,31 @@ function openCase() {
 
 // --- РАКЕТА ЛОГИКА ---
 function setBetAmount(event) {
-    const amount = event.target.getAttribute('data-bet');
-    document.getElementById('bet-input').value = amount;
+    const amount = parseFloat(event.target.getAttribute('data-bet'));
+    currentBet = amount;
+    document.getElementById('bet-input').value = amount.toFixed(2);
+    
+    document.querySelectorAll('.bet-amount-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
     updateActionButtonText();
 }
 
 function updateActionButtonText() {
     const betInput = document.getElementById('bet-input');
-    const betAmount = parseFloat(betInput.value);
+    const betAmount = parseFloat(betInput.value) || 0;
     const actionBtn = document.getElementById('rocket-action-btn');
     
+    // Обновление текущей ставки при вводе
+    if (!isRocketGameActive) currentBet = betAmount;
+
     if (isRocketGameActive) {
-        actionBtn.innerHTML = `ЗАБРАТЬ x${multiplier.toFixed(2)} (${(betAmount * multiplier).toFixed(2)} ⭐)`;
+        actionBtn.innerHTML = `ЗАБРАТЬ x${multiplier.toFixed(2)} (${(currentBet * multiplier).toFixed(2)} ⭐)`;
         actionBtn.style.backgroundColor = 'var(--star-color)';
     } else {
-        if (betAmount > 0) {
+        if (betAmount >= 5) {
             actionBtn.innerHTML = `<i class="fas fa-rocket"></i> СДЕЛАТЬ СТАВКУ (${betAmount.toFixed(2)} ⭐)`;
             actionBtn.style.backgroundColor = 'var(--primary-color)';
         } else {
@@ -281,7 +297,7 @@ function updateActionButtonText() {
             actionBtn.disabled = true;
         }
     }
-    actionBtn.disabled = false;
+    actionBtn.disabled = betAmount < 5 && !isRocketGameActive;
 }
 
 function startRocketGame() {
@@ -290,14 +306,12 @@ function startRocketGame() {
     let betAmount = parseFloat(betInput.value);
 
     if (isRocketGameActive) {
-        // Логика ЗАБРАТЬ
         cashOut(betAmount);
         return;
     }
     
-    // Проверки перед ставкой
-    if (isNaN(betAmount) || betAmount <= 0) {
-        alert("Введите корректную сумму ставки.");
+    if (isNaN(betAmount) || betAmount < 5) {
+        alert("Минимальная ставка 5 звезд.");
         return;
     }
     if (userBalance < betAmount) {
@@ -311,56 +325,66 @@ function startRocketGame() {
     updateHeaderAndProfile();
     isRocketGameActive = true;
     multiplier = 1.00;
+    points = "0,300"; // Сброс графика
+    document.getElementById('multiplier-line').setAttribute('points', points);
     
     // Обновление UI
     document.getElementById('rocket-multiplier').textContent = 'x1.00';
     document.getElementById('rocket-multiplier').classList.remove('crashed');
+    document.getElementById('graph-area').classList.remove('crashed-shake');
     document.getElementById('rocket-info').textContent = 'В ИГРЕ...';
     document.getElementById('rocket-image').classList.remove('hidden');
-    document.getElementById('rocket-image').style.transform = `translateY(0) scale(0.6)`;
+    document.getElementById('rocket-image').style.transform = `translate(0px, 0px) scale(0.6)`;
     
     actionBtn.textContent = 'ЖДИТЕ СТАРТА...';
     actionBtn.disabled = true;
     
-    // Блокируем ввод ставки
+    // Блокируем управление
     betInput.disabled = true;
     document.querySelectorAll('.bet-amount-btn').forEach(btn => btn.disabled = true);
 
-    // Случайный коэффициент краша (например, от 1.01 до 10.00)
+    // Случайный коэффициент краша (от 1.01 до 10.00)
     const crashPoint = Math.max(1.01, Math.floor(Math.random() * 900 + 101) / 100); 
 
-    // Ждем небольшой рандомный старт
+    // Задержка перед стартом
     setTimeout(() => {
         actionBtn.disabled = false;
         updateActionButtonText();
         rocketInterval = setInterval(() => updateRocket(crashPoint), 100);
         
-        // Устанавливаем таймер для краша
         crashTimeout = setTimeout(crashGame, calculateCrashTime(crashPoint));
-    }, 1500 + Math.random() * 1000); // Случайная задержка 1.5 - 2.5 сек
+    }, 1500 + Math.random() * 1000); 
 }
 
 function calculateCrashTime(crashPoint) {
-    // Очень приблизительная формула для соответствия времени и множителя
-    // T = log(M) * 1000 + M * 100
     return Math.log(crashPoint) * 5000 + crashPoint * 50; 
 }
 
 function updateRocket(crashPoint) {
     if (!isRocketGameActive) return;
 
-    multiplier += 0.01 * Math.pow(multiplier, 0.5); // Ускорение: быстрее растет, чем выше множитель
+    multiplier += 0.01 * Math.pow(multiplier, 0.5); 
     multiplier = Math.min(multiplier, crashPoint);
     
+    const currentX = multiplier * X_SCALE;
+    const currentY = GRAPH_HEIGHT - (Math.log(multiplier) * Y_SCALE * 2); 
+    
+    const rocketX = Math.min(currentX - 20, GRAPH_WIDTH - 60); // Ракета вправо
+    const rocketY = Math.min(currentY - 60, GRAPH_HEIGHT - 120); // Ракета вверх (инвертированная Y)
+
+    // Обновление графика
+    if (currentX < GRAPH_WIDTH) {
+        points += ` ${currentX.toFixed(2)},${currentY.toFixed(2)}`;
+        document.getElementById('multiplier-line').setAttribute('points', points);
+    }
+
     document.getElementById('rocket-multiplier').textContent = `x${multiplier.toFixed(2)}`;
+    document.getElementById('rocket-multiplier').style.transform = `translateY(-${(GRAPH_HEIGHT - currentY) * 0.7}px) translateX(${rocketX * 0.2}px)`;
+
+    // Параллельное движение ракеты вправо-вверх
+    document.getElementById('rocket-image').style.transform = `translate(${rocketX.toFixed(2)}px, -${(GRAPH_HEIGHT - currentY).toFixed(2)}px) scale(0.6) rotate(-20deg)`;
+
     updateActionButtonText();
-    
-    // Визуальное обновление ракеты (0% Y = низ, 100% Y = верх)
-    const graphHeight = 300;
-    let yOffset = Math.min(graphHeight, Math.log10(multiplier) * 150);
-    let scale = Math.min(1, 0.6 + multiplier * 0.05);
-    
-    document.getElementById('rocket-image').style.transform = `translateY(-${yOffset}px) scale(${scale})`;
     
     if (multiplier >= crashPoint) {
         clearInterval(rocketInterval);
@@ -381,6 +405,7 @@ function crashGame() {
 
     document.getElementById('rocket-multiplier').textContent = `x${crashMultiplier}`;
     document.getElementById('rocket-multiplier').classList.add('crashed');
+    document.getElementById('graph-area').classList.add('crashed-shake'); // Эффект тряски
     document.getElementById('rocket-info').textContent = `Улетела на x${crashMultiplier}! Вы проиграли!`;
     document.getElementById('last-multiplier').textContent = `x${crashMultiplier}`;
     document.getElementById('rocket-image').classList.add('hidden');
@@ -392,9 +417,10 @@ function crashGame() {
     updateActionButtonText();
     tg.HapticFeedback.notificationOccurred('error');
     
-    // Возвращаем кнопку в исходное состояние через 3 секунды
+    // Возвращаем кнопку и удаляем тряску через 3 секунды
     setTimeout(() => {
         document.getElementById('rocket-info').textContent = 'Нажмите "Ставка" для начала';
+        document.getElementById('graph-area').classList.remove('crashed-shake');
         updateActionButtonText();
     }, 3000);
 }
@@ -427,10 +453,10 @@ function cashOut(betAmount) {
     updateActionButtonText();
     tg.HapticFeedback.notificationOccurred('success');
     
-    // Возвращаем ракету на место и обновляем UI
+    // Возвращаем UI в исходное состояние
     setTimeout(() => {
         document.getElementById('rocket-image').classList.add('hidden');
-        document.getElementById('rocket-image').style.transform = `translateY(0) scale(0.6)`;
+        document.getElementById('rocket-image').style.transform = `translate(0px, 0px) scale(0.6)`;
         document.getElementById('rocket-info').textContent = 'Нажмите "Ставка" для начала';
         updateActionButtonText();
     }, 3000);
