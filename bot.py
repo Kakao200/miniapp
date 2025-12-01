@@ -6,7 +6,7 @@ from aiogram.filters import Command
 from aiogram.types import WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
 
 TOKEN = "8357449113:AAHF_heoj3besQ4YhGeuysHHNDeZjRFVHYc"
-WEBAPP_URL = "https://Kakao200.github.io/miniapp/?v=20251201_3" 
+WEBAPP_URL = "https://Kakao200.github.io/miniapp/?v=20251201_4" 
 
 
 bot = Bot(token=TOKEN)
