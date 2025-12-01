@@ -1,66 +1,143 @@
 let username = "";
 let tg = window.Telegram.WebApp;
-let isDarkTheme = false;
-let userBalance = 1000;
-const CASE_COST = 25;
+let currentView = 'login'; 
 
+// --- МАССИВ ПРИЗОВ ---
+// 6 предметов. Сумма шансов (prob) = 1.0 (100%)
 const PRIZES = [
-    { name: "Мишка", image: "assets/mishka.png", stars: 100, prob: 30 },
-    { name: "Цветок", image: "assets/cvetok.png", stars: 50, prob: 10 },
-    { name: "Роза", image: "assets/roza.png", stars: 75, prob: 15 },
-    { name: "Сердце", image: "assets/serdce.png", stars: 150, prob: 5 },
-    { name: "Подарок", image: "assets/podarok.png", stars: 25, prob: 25 },
-    { name: "Леденец", image: "assets/ledenez.png", stars: 10, prob: 15 }
+    { emoji: "🐻", prob: 0.05, name: "Мишка", image: "assets/mishka.png" },    // 5% (Легендарный)
+    { emoji: "🎁", prob: 0.10, name: "Подарок", image: "assets/podarok.png" }, // 10% (Эпический)
+    { emoji: "❤️", prob: 0.15, name: "Сердце", image: "assets/serdce.png" },   // 15% (Редкий)
+    { emoji: "🌹", prob: 0.20, name: "Роза", image: "assets/roza.png" },       // 20% (Обычный)
+    { emoji: "🌼", prob: 0.25, name: "Цветок", image: "assets/cvetok.png" },   // 25% (Частый)
+    { emoji: "🍭", prob: 0.25, name: "Леденец", image: "assets/ledenets.png" } // 25% (Частый)
 ];
 
-function showScreen(screenId) {
-    document.querySelectorAll('.app-screen').forEach(s => s.classList.add('hidden'));
-    const target = document.getElementById(screenId);
-    if (target) {
-        target.classList.remove('hidden');
-    }
-}
+const PRIZE_ITEM_WIDTH = 80; 
+const SCROLL_DURATION = 5000; 
 
-function updateBalanceDisplay() {
-    document.getElementById('star-balance').textContent = userBalance;
-    document.getElementById('case-cost').textContent = CASE_COST;
-}
+// --- Инициализация ---
+window.addEventListener("load", () => {
+    tg.ready();
+    tg.expand();
+    tg.setHeaderColor("secondary_bg_color");
+    tg.setBackgroundColor("bg_color");
 
-function toggleTheme() {
-    isDarkTheme = !isDarkTheme;
-    const themeSwitcher = document.getElementById('theme-switcher');
-    
-    if (isDarkTheme) {
-        document.body.classList.add('dark-theme');
-        themeSwitcher.classList.remove('fa-moon');
-        themeSwitcher.classList.add('fa-sun');
+    const savedUsername = localStorage.getItem("username");
+    if (savedUsername) {
+        username = savedUsername;
+        showView('home');
+        updateHeaderAndProfile();
     } else {
-        document.body.classList.remove('dark-theme');
-        themeSwitcher.classList.remove('fa-sun');
-        themeSwitcher.classList.add('fa-moon');
+        showView('login');
+    }
+});
+
+// --- Навигация ---
+function showView(viewName) {
+    const screens = document.querySelectorAll('.screen');
+    screens.forEach(s => s.classList.add('hidden'));
+
+    if (viewName !== 'login') {
+        document.getElementById('main-app').classList.remove('hidden');
+    } else {
+        document.getElementById('login-screen').classList.remove('hidden');
+    }
+
+    const views = document.querySelectorAll('.content-view');
+    views.forEach(v => v.classList.add('hidden'));
+
+    let targetElement;
+    if (viewName === 'login') {
+        targetElement = document.getElementById('login-screen');
+    } else if (viewName === 'home') {
+        targetElement = document.getElementById('home-screen');
+    } else if (viewName === 'case') {
+        targetElement = document.getElementById('case-screen');
+        resetCaseScreen();
+    } else if (viewName === 'profile') {
+        targetElement = document.getElementById('profile-screen');
+    }
+
+    if (targetElement) {
+        targetElement.classList.remove('hidden');
+        currentView = viewName;
     }
 }
 
-function renderPrizesGrid() {
-    const grid = document.getElementById('prizes-grid');
-    grid.innerHTML = '';
+function navigateTo(viewName) {
+    showView(viewName);
+    if (viewName === 'profile') updateHeaderAndProfile();
+}
+
+// --- Данные пользователя ---
+function updateHeaderAndProfile() {
+    const userId = tg.initDataUnsafe.user?.id || 'N/A';
+    document.getElementById("header-username").textContent = username;
+    document.getElementById("profile-username").textContent = username;
+    document.getElementById("profile-id").textContent = userId;
+}
+
+// --- Вход ---
+function login() {
+    const code = document.getElementById("code-input").value.trim();
+    const msgElem = document.getElementById("login-msg");
+    msgElem.textContent = "";
     
-    PRIZES.forEach(prize => {
-        const prizeElement = document.createElement('div');
-        prizeElement.className = 'prize-item';
-        prizeElement.innerHTML = `
-            <img src="${prize.image}" alt="${prize.name}">
-            <div class="prize-name-small">${prize.name}</div>
-        `;
-        grid.appendChild(prizeElement);
-    });
+    if (code.length === 5 && /^\d+$/.test(code)) {
+        username = tg.initDataUnsafe.user?.username || 
+                   tg.initDataUnsafe.user?.first_name || 
+                   "User#" + (tg.initDataUnsafe.user?.id || 'GUEST');
+        localStorage.setItem("username", username);
+        updateHeaderAndProfile();
+        navigateTo('home');
+    } else {
+        msgElem.textContent = "❌ Неверный или неполный код!";
+    }
+}
+
+// --- Выход ---
+function logout() {
+    localStorage.removeItem("username");
+    username = "";
+    showView('login');
+    document.getElementById("code-input").value = "";
+    tg.close();
+}
+
+// --- Создание элемента картинки ---
+function createPrizeElement(prize) {
+    const item = document.createElement('div');
+    item.classList.add('prize-item');
+    const img = document.createElement('img');
+    img.src = prize.image; 
+    img.alt = prize.name;
+    img.classList.add('prize-image');
+    item.appendChild(img);
+    return item;
+}
+
+// --- Логика Кейса ---
+function resetCaseScreen() {
+    document.getElementById("case-result-box").classList.add('hidden');
+    document.getElementById("open-case-btn").disabled = false;
+    document.getElementById("open-case-btn").textContent = "ОТКРЫТЬ (0 руб)";
+
+    const reel = document.getElementById("prize-scroll-reel");
+    reel.innerHTML = '';
+    reel.style.transform = 'translateX(0)';
+    reel.style.transition = 'none';
+
+    for (let i = 0; i < 200; i++) {
+        let prize = PRIZES[Math.floor(Math.random() * PRIZES.length)];
+        const item = createPrizeElement(prize); 
+        reel.appendChild(item);
+    }
 }
 
 function spinPrize() {
-    const totalProb = PRIZES.reduce((sum, prize) => sum + prize.prob, 0);
-    let rnd = Math.random() * totalProb;
+    let rnd = Math.random();
     let total = 0;
-    
     for (const prize of PRIZES) {
         total += prize.prob;
         if (rnd <= total) return prize;
@@ -68,145 +145,37 @@ function spinPrize() {
     return PRIZES[0];
 }
 
-function startCaseOpening() {
-    if (userBalance < CASE_COST) {
-        tg.showPopup({
-            title: "Недостаточно звезд",
-            message: "Пополните баланс для открытия кейсов",
-            buttons: [{ type: "ok" }]
-        });
-        return;
-    }
-
-    userBalance -= CASE_COST;
-    updateBalanceDisplay();
-    showScreen('case-screen');
+function openCase() {
+    document.getElementById("open-case-btn").disabled = true;
+    document.getElementById("open-case-btn").textContent = "Крутим...";
+    document.getElementById("case-result-box").classList.add('hidden');
     
-    const spinningImg = document.getElementById('spinning-prize-img');
-    let spinCount = 0;
-    const maxSpins = 30;
-    const spinInterval = 80;
+    const reel = document.getElementById("prize-scroll-reel");
+    const winningPrize = spinPrize();
     
-    const spinAnimation = setInterval(() => {
-        const randomPrize = PRIZES[Math.floor(Math.random() * PRIZES.length)];
-        spinningImg.src = randomPrize.image;
-        spinningImg.alt = randomPrize.name;
-        spinCount++;
-        
-        if (spinCount >= maxSpins) {
-            clearInterval(spinAnimation);
-            const winningPrize = spinPrize();
-            showResult(winningPrize);
-        }
-    }, spinInterval);
-}
+    resetCaseScreen();
+    
+    // Вставляем выигрышный приз в позицию 198
+    const stopIndex = 198; 
+    const winningItem = createPrizeElement(winningPrize);
+    reel.replaceChild(winningItem, reel.children[stopIndex]); 
 
-function showResult(prize) {
+    // Расчет смещения
+    const offsetToCenter = (reel.offsetWidth / 2) - (PRIZE_ITEM_WIDTH / 2);
+    const totalShift = (stopIndex * PRIZE_ITEM_WIDTH) - offsetToCenter;
+    const randomOffset = Math.floor(Math.random() * 40) - 20; 
+    const finalShift = totalShift + randomOffset;
+
+    reel.style.transition = `transform ${SCROLL_DURATION / 1000}s cubic-bezier(0.1, 0.9, 0.2, 1)`;
+    reel.style.transform = `translateX(-${finalShift}px)`;
+
     setTimeout(() => {
-        document.getElementById('won-prize-img').src = prize.image;
-        document.getElementById('won-prize-img').alt = prize.name;
-        document.getElementById('won-prize-name').textContent = prize.name;
-        document.getElementById('won-prize-value').textContent = prize.stars;
-        showScreen('result-screen');
+        document.getElementById("result-emoji").innerHTML = `<img src="${winningPrize.image}" alt="${winningPrize.name}" class="final-prize-image">`;
+        document.getElementById("result-msg").textContent = `Поздравляем! Вы выиграли: ${winningPrize.name}!`;
+        document.getElementById("case-result-box").classList.remove('hidden');
+        document.getElementById("open-case-btn").disabled = false;
+        document.getElementById("open-case-btn").textContent = "ОТКРЫТЬ СНОВА (0 руб)";
         tg.HapticFeedback.notificationOccurred('success');
-    }, 500);
+    }, SCROLL_DURATION);
 }
 
-function setupNavigation() {
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            const navTarget = item.dataset.nav;
-            
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            item.classList.add('active');
-            
-            switch(navTarget) {
-                case 'main':
-                    showScreen('main-app-screen');
-                    break;
-                case 'raffles':
-                    tg.showPopup({
-                        title: "Розыгрыши",
-                        message: "Раздел в разработке",
-                        buttons: [{ type: "ok" }]
-                    });
-                    break;
-                case 'top':
-                    tg.showPopup({
-                        title: "Топ игроков",
-                        message: "Раздел в разработке",
-                        buttons: [{ type: "ok" }]
-                    });
-                    break;
-                case 'profile':
-                    tg.showPopup({
-                        title: "Профиль",
-                        message: `Имя: ${username}\nБаланс: ${userBalance} звезд`,
-                        buttons: [{ type: "ok" }]
-                    });
-                    break;
-            }
-        });
-    });
-}
-
-function login() {
-    const code = document.getElementById("code-input").value.trim();
-    const msgElem = document.getElementById("login-msg");
-    msgElem.textContent = "";
-
-    if (code.length === 5 && /^\d+$/.test(code)) {
-        username = tg.initDataUnsafe.user?.username || 
-                   tg.initDataUnsafe.user?.first_name || 
-                   "User#" + (tg.initDataUnsafe.user?.id || 'GUEST');
-        
-        localStorage.setItem("username", username);
-        showScreen('main-app-screen');
-        tg.HapticFeedback.notificationOccurred('success');
-    } else {
-        msgElem.textContent = "❌ Неверный или неполный код!";
-        tg.HapticFeedback.notificationOccurred('error');
-    }
-}
-
-window.addEventListener("load", () => {
-    tg.ready();
-    tg.expand();
-    tg.setHeaderColor("#f0f2f5");
-    tg.setBackgroundColor("#f0f2f5");
-
-    const savedUsername = localStorage.getItem("username");
-    
-    if (!savedUsername) {
-        showScreen('login-screen');
-    } else {
-        username = savedUsername;
-        showScreen('main-app-screen');
-    }
-    
-    setupEventListeners();
-    updateBalanceDisplay();
-    renderPrizesGrid();
-    setupNavigation();
-});
-
-function setupEventListeners() {
-    document.getElementById('login-btn').addEventListener('click', login);
-    
-    document.getElementById('code-input').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') login();
-    });
-
-    document.getElementById('open-case-btn').addEventListener('click', () => {
-        showScreen('case-screen');
-    });
-
-    document.getElementById('open-now-btn').addEventListener('click', startCaseOpening);
-
-    document.getElementById('result-back-btn').addEventListener('click', () => {
-        showScreen('main-app-screen');
-    });
-
-    document.getElementById('theme-switcher').addEventListener('click', toggleTheme);
-}
