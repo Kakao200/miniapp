@@ -2,9 +2,14 @@ let username = "";
 
 // Проверка сохранённого кода при загрузке
 window.addEventListener("load", () => {
-    const savedCode = localStorage.getItem("userCode");
-    if (savedCode) {
-        loginWithCode(savedCode);
+    const savedUsername = localStorage.getItem("username");
+    if (savedUsername) {
+        username = savedUsername;
+        document.getElementById("username").textContent = username;
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("main-screen").style.display = "block";
+
+        Telegram.WebApp.ready();
     }
 });
 
@@ -19,31 +24,17 @@ function login() {
         return;
     }
 
-    // Сохраняем код
-    localStorage.setItem("userCode", code);
+    // В WebApp мы не отправляем код боту
+    // Просто показываем основной экран
+    username = Telegram.WebApp.initDataUnsafe.user?.username || Telegram.WebApp.initDataUnsafe.user?.id;
+    document.getElementById("username").textContent = username;
 
-    loginWithCode(code);
-}
+    localStorage.setItem("username", username);
 
-// Вход с кодом
-function loginWithCode(code) {
-    fetch(`https://your-server-ip:PORT/login?code=${code}`)
-        .then(res => res.json())
-        .then(data => {
-            if (data.ok) {
-                username = data.username || data.id;
-                document.getElementById("username").textContent = username;
-                document.getElementById("login-screen").style.display = "none";
-                document.getElementById("main-screen").style.display = "block";
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("main-screen").style.display = "block";
 
-                // WebApp готово, не закрываем
-                Telegram.WebApp.ready();
-            } else {
-                alert("Неверный код!");
-                localStorage.removeItem("userCode");
-            }
-        })
-        .catch(err => console.error(err));
+    Telegram.WebApp.ready();
 }
 
 // Открытие кейса
@@ -71,7 +62,7 @@ function back() {
 
 // Выйти из профиля
 function logout() {
-    localStorage.removeItem("userCode");
+    localStorage.removeItem("username");
     document.getElementById("main-screen").style.display = "none";
     document.getElementById("login-screen").style.display = "block";
 }
