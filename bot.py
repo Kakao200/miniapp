@@ -1,6 +1,7 @@
 import random
 import asyncio
 from aiogram import Bot, Dispatcher, types
+from aiogram.filters import Command
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
@@ -14,20 +15,24 @@ dp = Dispatcher()
 # Хранилище кодов
 codes = {}
 
-@dp.message(commands=["start"])
+# ================== Бот ==================
+@dp.message(Command("start"))
 async def cmd_start(message: types.Message):
     code = str(random.randint(10000, 99999))
     codes[code] = message.from_user.username or message.from_user.first_name
 
-    kb = types.ReplyKeyboardMarkup(keyboard=[
-        [types.KeyboardButton(text="Открыть App", web_app=types.WebAppInfo(url=WEBAPP_URL))]
-    ], resize_keyboard=True)
+    kb = types.ReplyKeyboardMarkup(
+        keyboard=[
+            [types.KeyboardButton(text="Открыть App", web_app=types.WebAppInfo(url=WEBAPP_URL))]
+        ],
+        resize_keyboard=True
+    )
 
     await message.answer(f"Привет! Вот твой код входа:\n**{code}**",
                          parse_mode="Markdown",
                          reply_markup=kb)
 
-# FastAPI сервер для проверки кода
+# ================== FastAPI для WebApp ==================
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -42,10 +47,19 @@ def login(code: str):
         return {"ok": True, "username": codes[code]}
     return {"ok": False}
 
-def start_bot():
-    asyncio.run(dp.start_polling(bot))
+# ================== Главная функция ==================
+async def main():
+    # Запуск бота и FastAPI параллельно
+    bot_task = asyncio.create_task(dp.start_polling(bot))
+    # uvicorn.run не является корутиной, поэтому используем loop.run_in_executor
+    loop = asyncio.get_event_loop()
+    api_task = loop.run_in_executor(
+        None, lambda: uvicorn.run(app, host="0.0.0.0", port=9090, log_level="info")
+    )
+    await asyncio.gather(bot_task, api_task)
 
 if __name__ == "__main__":
-    import threading
-    threading.Thread(target=start_bot).start()
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Выход...")
