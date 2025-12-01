@@ -1,6 +1,6 @@
 let username = "";
 
-// Проверяем, есть ли код в localStorage при загрузке
+// Проверка сохранённого кода при загрузке
 window.addEventListener("load", () => {
     const savedCode = localStorage.getItem("userCode");
     if (savedCode) {
@@ -8,7 +8,7 @@ window.addEventListener("load", () => {
     }
 });
 
-// Функция входа
+// Функция нажатия кнопки "Войти"
 function login() {
     const code = document.getElementById("code-input").value.trim();
     const msgElem = document.getElementById("login-msg");
@@ -19,27 +19,31 @@ function login() {
         return;
     }
 
-    // Сохраняем код в localStorage
+    // Сохраняем код
     localStorage.setItem("userCode", code);
 
     loginWithCode(code);
 }
 
-// Вход с кодом (используется и при повторном заходе)
+// Вход с кодом
 function loginWithCode(code) {
-    // Отправка кода боту через Telegram WebApp
-    Telegram.WebApp.sendData(code);
+    fetch(`https://your-server-ip:PORT/login?code=${code}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.ok) {
+                username = data.username || data.id;
+                document.getElementById("username").textContent = username;
+                document.getElementById("login-screen").style.display = "none";
+                document.getElementById("main-screen").style.display = "block";
 
-    // Показываем основной экран
-    document.getElementById("login-screen").style.display = "none";
-    document.getElementById("main-screen").style.display = "block";
-
-    // username пока заглушкой
-    username = "Вы вошли!";
-    document.getElementById("username").textContent = username;
-
-    // Предотвращаем закрытие WebApp
-    Telegram.WebApp.ready();
+                // WebApp готово, не закрываем
+                Telegram.WebApp.ready();
+            } else {
+                alert("Неверный код!");
+                localStorage.removeItem("userCode");
+            }
+        })
+        .catch(err => console.error(err));
 }
 
 // Открытие кейса
@@ -60,12 +64,12 @@ function openCase() {
     }
 }
 
-// Кнопка "Назад"
+// Назад из кейса
 function back() {
     document.getElementById("result").style.display = "none";
 }
 
-// Кнопка "Выйти"
+// Выйти из профиля
 function logout() {
     localStorage.removeItem("userCode");
     document.getElementById("main-screen").style.display = "none";
