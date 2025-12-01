@@ -1,36 +1,47 @@
 let username = "";
 
-async function login() {
-    const code = document.getElementById("code-input").value;
-    const res = await fetch(`https://your-server-ip:8080/login?code=${code}`);
-    const data = await res.json();
-    const msg = document.getElementById("login-msg");
+// Вход по коду
+function login() {
+    const code = document.getElementById("code-input").value.trim();
+    const msgElem = document.getElementById("login-msg");
+    msgElem.textContent = "";
 
-    if (data.ok) {
-        username = data.username;
-        document.getElementById("username").textContent = username;
-        document.getElementById("login-screen").style.display = "none";
-        document.getElementById("main-screen").style.display = "block";
-    } else {
-        msg.textContent = "Неверный код!";
+    if (!code) {
+        msgElem.textContent = "Введите код!";
+        return;
     }
+
+    // Отправка кода боту через Telegram WebApp
+    Telegram.WebApp.sendData(code);
+
+    // После отправки можно закрыть экран входа (опционально)
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("main-screen").style.display = "block";
+
+    // username бот пришлёт через Telegram чат, пока мы можем показать просто "Вы вошли"
+    username = "Вы вошли!";
+    document.getElementById("username").textContent = username;
 }
 
+// Открытие кейса
 function openCase() {
     document.getElementById("result").style.display = "block";
     const emojis = ["🍎", "🍌", "🍒"];
     const probs = [0.5, 0.3, 0.2];
+
     let rnd = Math.random();
     let total = 0;
-    for (let i=0;i<emojis.length;i++){
+
+    for (let i = 0; i < emojis.length; i++) {
         total += probs[i];
-        if(rnd <= total){
+        if (rnd <= total) {
             document.getElementById("emoji").textContent = emojis[i];
             break;
         }
     }
 }
 
+// Кнопка "Назад" из результата
 function back() {
     document.getElementById("result").style.display = "none";
 }
