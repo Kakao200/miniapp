@@ -1,15 +1,13 @@
 let username = "";
+let tg = window.Telegram.WebApp;
 
-// Проверка сохранённого кода при загрузке
+// Проверка сохранённого логина при загрузке
 window.addEventListener("load", () => {
+    tg.ready();
     const savedUsername = localStorage.getItem("username");
     if (savedUsername) {
         username = savedUsername;
-        document.getElementById("username").textContent = username;
-        document.getElementById("login-screen").style.display = "none";
-        document.getElementById("main-screen").style.display = "block";
-
-        Telegram.WebApp.ready();
+        showMainScreen();
     }
 });
 
@@ -24,17 +22,25 @@ function login() {
         return;
     }
 
-    // В WebApp мы не отправляем код боту
-    // Просто показываем основной экран
-    username = Telegram.WebApp.initDataUnsafe.user?.username || Telegram.WebApp.initDataUnsafe.user?.id;
+    // Проверяем код локально (без отправки боту)
+    // В реальном приложении здесь должна быть проверка через бекенд
+    if (code.length === 5 && /^\d+$/.test(code)) {
+        // Используем данные пользователя из Telegram WebApp
+        username = tg.initDataUnsafe.user?.username || 
+                   tg.initDataUnsafe.user?.first_name || 
+                   "User#" + tg.initDataUnsafe.user?.id;
+        
+        localStorage.setItem("username", username);
+        showMainScreen();
+    } else {
+        msgElem.textContent = "Неверный код!";
+    }
+}
+
+function showMainScreen() {
     document.getElementById("username").textContent = username;
-
-    localStorage.setItem("username", username);
-
     document.getElementById("login-screen").style.display = "none";
     document.getElementById("main-screen").style.display = "block";
-
-    Telegram.WebApp.ready();
 }
 
 // Открытие кейса
@@ -65,4 +71,5 @@ function logout() {
     localStorage.removeItem("username");
     document.getElementById("main-screen").style.display = "none";
     document.getElementById("login-screen").style.display = "block";
+    document.getElementById("code-input").value = "";
 }

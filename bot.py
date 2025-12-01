@@ -1,5 +1,4 @@
 import random
-import json
 import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
@@ -11,16 +10,11 @@ WEBAPP_URL = "https://Kakao200.github.io/miniapp/"
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# Словарь для кодов: code -> {"username": str, "id": int}
-codes = {}
-
 # =================== /start ===================
 @dp.message(Command("start"))
 async def cmd_start(msg: types.Message):
     code = str(random.randint(10000, 99999))
-    user_info = msg.from_user.username or str(msg.from_user.id)
-    codes[code] = user_info
-
+    
     kb = ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="Открыть App", web_app=WebAppInfo(url=WEBAPP_URL))]
@@ -29,21 +23,11 @@ async def cmd_start(msg: types.Message):
     )
 
     await msg.answer(
-        f"Привет! Вот твой код входа:\n**{code}**",
+        f"Привет! Вот твой код входа:\n**{code}**\n\n"
+        f"Используй его в веб-приложении",
         parse_mode="Markdown",
         reply_markup=kb
     )
-
-# =================== Получение кода из WebApp ===================
-@dp.message()
-async def handle_webapp(msg: types.Message):
-    if msg.web_app_data:
-        code = msg.web_app_data.data.strip()
-        if code in codes:
-            user_info = codes[code]
-            await msg.answer(f"Вход успешен!\nПрофиль: {user_info}")
-        else:
-            await msg.answer("Неверный код!")
 
 # =================== Запуск ===================
 async def main():
