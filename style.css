@@ -1,30 +1,16 @@
 /* Переменные для Цветов */
 :root {
-    --bg-color: #1a1a2e; /* Темный фон */
-    --card-color: #2c2c44; /* Фон карточек */
+    --bg-color: #1a1a2e; /* Основной темный фон */
+    --card-color: #2c2c44; /* Фон карточек и хедера */
     --text-color: #ffffff; /* Светлый текст */
     --primary-color: #2196F3; /* Акцент (Синий) */
-    --secondary-color: #0f3460; /* Дополнительный (Темно-синий) */
+    --secondary-color: #0f3460; /* Темно-синий */
     --nav-bar-color: #1c1c38; /* Фон навигации */
+    --star-color: #ffc107; /* Звезды/Баланс/Индикатор */
+    --rocket-path-color: #8c73ff; /* Фиолетовый для ракеты */
+    --error-color: #e3342f; /* Красный */
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     --border-radius: 12px;
-    --star-color: #ffc107; /* Золотая звезда */
-
-    /* Светлая Тема (Неактивно по умолчанию) */
-    --light-bg-color: #f0f2f5;
-    --light-card-color: #ffffff;
-    --light-text-color: #1a1a2e;
-    --light-nav-bar-color: #ffffff;
-    --light-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Светлая Тема (Класс) */
-.light-theme {
-    --bg-color: var(--light-bg-color);
-    --card-color: var(--light-card-color);
-    --text-color: var(--light-text-color);
-    --nav-bar-color: var(--light-nav-bar-color);
-    --shadow: var(--light-shadow);
 }
 
 body {
@@ -37,7 +23,6 @@ body {
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    transition: background-color 0.3s, color 0.3s;
 }
 
 #app-container {
@@ -67,16 +52,14 @@ button {
     padding: 12px 20px;
     border-radius: 8px;
     font-weight: 600;
-    transition: background-color 0.2s, transform 0.1s, color 0.2s;
+    transition: background-color 0.2s, transform 0.1s;
 }
 button:active { transform: scale(0.98); }
 
 .primary-btn { background-color: var(--primary-color); color: var(--text-color); }
 .primary-btn:hover { background-color: #4a9ff7; }
 .big-btn { padding: 15px 20px; font-size: 1.1rem; }
-
 .secondary-btn { background-color: var(--secondary-color); color: var(--text-color); }
-
 .icon-btn {
     background: none;
     border: none;
@@ -87,15 +70,9 @@ button:active { transform: scale(0.98); }
     border-radius: 50%;
     margin-left: 10px;
 }
-.icon-btn:hover { background-color: rgba(255, 255, 255, 0.1); }
-.light-theme .icon-btn { 
-    color: var(--light-text-color);
-}
-.light-theme .icon-btn:hover { background-color: #e0e0e0; }
-
 .full-width-btn { width: 100%; margin-top: 15px; }
 
-input[type="text"] {
+input[type="number"], input[type="text"] {
     width: calc(100% - 20px);
     padding: 10px;
     margin: 10px 0;
@@ -104,8 +81,8 @@ input[type="text"] {
     background-color: var(--card-color);
     color: var(--text-color);
     box-sizing: border-box;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
+.error-msg { color: var(--error-color); margin-top: 10px; text-align: center; }
 
 /* --------------------------------- */
 /* Хедер (Верхняя Панель) */
@@ -114,32 +91,44 @@ input[type="text"] {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
+    padding: 15px 15px;
     background-color: var(--card-color);
     border-bottom: 1px solid #3c3c54;
     position: sticky;
     top: 0;
     z-index: 10;
-    transition: background-color 0.3s, border-color 0.3s;
 }
-.light-theme #app-header { border-bottom: 1px solid #d0d0d0; }
-
-
-.header-left, .header-right { display: flex; align-items: center; }
-.balance-info { 
+.header-balance-info { 
     display: flex; 
     align-items: center; 
     font-weight: 700; 
-    background-color: #4CAF50; 
+    background-color: var(--star-color); 
+    color: var(--bg-color);
     padding: 8px 12px;
     border-radius: 20px;
     font-size: 0.95rem;
+}
+.header-balance-info i { margin-right: 8px; color: var(--secondary-color); }
+
+/* Переключатель режимов */
+.mode-toggle {
+    display: flex;
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+    padding: 3px;
+}
+.mode-btn {
+    padding: 8px 15px;
+    background: none;
+    color: #b0b0d0;
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s;
+    border-radius: 6px;
+}
+.mode-btn.active {
+    background-color: var(--primary-color);
     color: var(--text-color);
 }
-.balance-info i { margin-right: 8px; color: #ffeb3b; }
-
-.light-theme .balance-info { background-color: #81C784; color: var(--light-text-color); }
-
 
 /* --------------------------------- */
 /* Контент и Карточки */
@@ -147,9 +136,8 @@ input[type="text"] {
 #app-content { 
     padding: 20px; 
     flex-grow: 1; 
-    padding-bottom: 70px; 
+    padding-bottom: 70px; /* Отступ для навигационной панели */
 }
-
 .login-card, .profile-details-card, .stats-card, .placeholder-card {
     background-color: var(--card-color);
     padding: 20px;
@@ -157,191 +145,212 @@ input[type="text"] {
     margin-bottom: 20px;
     box-shadow: var(--shadow);
     text-align: left;
-    transition: background-color 0.3s, box-shadow 0.3s;
 }
-.login-card { 
-    text-align: center; 
-    margin-top: 40vh; 
-    transform: translateY(-50%); 
-}
-.placeholder-card { text-align: center; color: #b0b0d0; }
-.light-theme .placeholder-card { color: #555577; }
-
-/* --------------------------------- */
-/* ГЛАВНЫЙ ЭКРАН (КЕЙСЫ) */
-/* --------------------------------- */
-
-.case-card {
-    background-color: var(--card-color);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    cursor: pointer;
-    transition: transform 0.2s, border-color 0.2s;
-    border: 2px solid transparent;
-}
-.case-card:hover { transform: translateY(-5px); }
-
-/* Стиль для одиночной карточки на Главном экране */
-.case-card.main-case-card {
-    display: block;
-    width: 90%; 
-    max-width: 300px;
-    margin: 30px auto; 
-    padding: 30px;
-    text-align: center;
-    border-color: var(--primary-color);
-}
-.case-card.main-case-card h3 {
-    margin-top: 10px;
-    font-size: 1.2rem;
-}
-.case-card.main-case-card .case-desc {
-    font-size: 0.9rem;
-    color: #b0b0d0;
-}
-
-.case-img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 5px; }
-.case-price {
-    background-color: var(--star-color);
-    color: var(--bg-color);
-    font-weight: 700;
-    font-size: 0.8rem;
-    padding: 2px 8px;
-    border-radius: 10px;
-    display: inline-flex;
-    align-items: center;
-    margin-top: 5px;
-}
-.case-price i { font-size: 0.7rem; margin-left: 4px; }
-
-
-/* --------------------------------- */
-/* Секция "Вы можете выиграть" (на case-screen) */
-/* --------------------------------- */
-.prizes-header {
-    text-align: left;
-    margin-top: 25px;
-    margin-bottom: 15px;
-    font-size: 1.1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 5px;
-    font-weight: 600;
-}
-.light-theme .prizes-header { border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
-
-/* Контейнер для горизонтальной прокрутки призов */
-#winnable-prizes-list {
-    display: flex;
-    overflow-x: scroll;
-    padding-bottom: 10px;
-    -webkit-overflow-scrolling: touch;
-    gap: 10px;
-}
-.prize-display-card {
-    background-color: var(--card-color);
+.login-card { text-align: center; margin-top: 40vh; transform: translateY(-50%); }
+.promo-banner {
+    background-color: var(--secondary-color);
     padding: 10px;
-    border-radius: var(--border-radius);
+    border-radius: 8px;
     text-align: center;
-    flex-shrink: 0;
-    width: 100px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-}
-.prize-display-card img { width: 70px; height: 70px; object-fit: contain; }
-.prize-display-card .prize-name { font-size: 0.8rem; margin: 5px 0 0; font-weight: 600; }
-.prize-display-card .prize-prob { 
-    font-size: 0.75rem; 
-    color: #ffeb3b; 
-    margin-top: 5px;
     font-weight: 600;
-}
-.light-theme .prize-display-card .prize-prob { color: #cc7800; }
-
-/* --------------------------------- */
-/* ПЕРЕКЛЮЧАТЕЛЬ (SWITCH) - Демо Режим */
-/* --------------------------------- */
-.demo-mode-toggle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid #3c3c54;
-    margin-bottom: 15px;
-}
-.demo-mode-toggle .demo-label { font-weight: 600; }
-.light-theme .demo-mode-toggle { border-bottom: 1px solid #d0d0d0; }
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 24px;
-}
-.switch input { opacity: 0; width: 0; height: 0; }
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
-}
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 16px;
-  width: 16px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: .4s;
-}
-input:checked + .slider { background-color: #4CAF50; } 
-input:focus + .slider { box-shadow: 0 0 1px #4CAF50; }
-input:checked + .slider:before { transform: translateX(26px); }
-.slider.round { border-radius: 24px; }
-.slider.round:before { border-radius: 50%; }
-
-/* --------------------------------- */
-/* ЭКРАН ИНВЕНТАРЯ */
-/* --------------------------------- */
-
-.inventory-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 15px;
     margin-top: 20px;
 }
-.inventory-item {
+.back-link {
+    color: var(--primary-color);
+    cursor: pointer;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+.back-link i { margin-right: 5px; }
+
+/* Сетка Кейсов */
+.case-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* До 3 в ряд */
+    gap: 15px;
+    justify-content: center;
+    margin-top: 15px;
+}
+.case-card-item {
     background-color: var(--card-color);
-    padding: 10px;
+    padding: 15px 10px;
     border-radius: var(--border-radius);
     text-align: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.2s;
 }
-.inventory-item img { width: 70px; height: 70px; object-fit: contain; }
-.item-count {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background-color: var(--primary-color);
-    color: white;
-    font-size: 0.7rem;
+.case-card-item:hover { transform: translateY(-5px); }
+.case-card-item .case-img { width: 80px; height: 80px; object-fit: contain; }
+.case-card-item h4 { margin: 5px 0 0; font-size: 0.9em; }
+.case-price {
+    color: var(--star-color);
     font-weight: 700;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+.case-price i { font-size: 0.8em; margin-left: 2px; }
+
+
+/* --------------------------------- */
+/* ЭКРАН "РАКЕТА" */
+/* --------------------------------- */
+.rocket-game-area {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.graph-area {
+    position: relative;
+    height: 300px;
+    background-color: #131320; /* Темно-фиолетовый фон */
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid var(--card-color);
+    flex-direction: column;
+    border: 1px solid var(--secondary-color);
 }
-.placeholder-text {
-    grid-column: 1 / -1;
-    text-align: center;
+.rocket-multiplier {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--star-color);
+    text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+    z-index: 5;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: color 0.3s;
+}
+.rocket-multiplier.crashed {
+    color: var(--error-color);
+}
+.rocket-info {
+    position: absolute;
+    bottom: 20px;
     color: #b0b0d0;
+    font-size: 1em;
+}
+
+/* Имитация ракеты и пути */
+.rocket-image {
+    position: absolute;
+    width: 60px;
+    height: 120px;
+    bottom: 0;
+    left: 10%; /* Начальная позиция */
+    transform-origin: bottom center;
+    z-index: 4;
+    transition: all 0.1s linear; /* Плавность для начальной анимации */
+}
+.rocket-path {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 10% 90%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+}
+
+
+/* Управление ставкой */
+.bet-controls h3 { margin-top: 0; }
+.bet-quick-select {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.bet-amount-btn {
+    flex-grow: 1;
+    background-color: var(--secondary-color);
+    padding: 10px;
+}
+
+.last-round-info {
+    text-align: center;
+    font-size: 0.9em;
+    color: #b0b0d0;
+}
+#last-multiplier {
+    color: var(--star-color);
+    font-weight: 700;
+}
+
+/* --------------------------------- */
+/* ЭКРАН КЕЙСА (ПОВТОР) */
+/* --------------------------------- */
+.case-opening-area {
+    overflow: hidden;
+    position: relative;
+    height: 80px;
+    background-color: #131320;
+    border-radius: 8px;
+    border: 2px solid var(--primary-color);
+    margin-bottom: 20px;
+}
+.scroll-wrapper { position: relative; height: 100%; }
+.prize-reel {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    transition: transform 5s cubic-bezier(0.1, 0.9, 0.2, 1);
+    width: max-content;
+}
+.prize-item {
+    padding: 0 10px;
+    flex-shrink: 0;
+    width: 60px;
+    text-align: center;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.indicator {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 100%;
+    background-color: var(--star-color);
+    box-shadow: 0 0 10px var(--star-color);
+}
+.prize-image {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+.case-result-box {
+    margin-top: 20px;
+    text-align: center;
+    background-color: var(--secondary-color);
+    padding: 20px;
+    border-radius: var(--border-radius);
+}
+.final-prize-image {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    animation: prizeGlow 1.5s infinite alternate;
+}
+@keyframes prizeGlow {
+    from { filter: drop-shadow(0 0 5px rgba(33, 150, 243, 0.5)); transform: scale(1); }
+    to { filter: drop-shadow(0 0 15px var(--primary-color)); transform: scale(1.05); }
+}
+.open-btn { width: 100%; font-size: 1.1rem; padding: 15px; }
+.probabilities-box { margin-top: 20px; }
+.probabilities-box p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    display: flex;
+    justify-content: space-between;
 }
 
 
@@ -364,7 +373,6 @@ input:checked + .slider:before { transform: translateX(26px); }
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     z-index: 10;
-    transition: background-color 0.3s, box-shadow 0.3s;
 }
 .nav-item {
     display: flex;
@@ -388,73 +396,4 @@ input:checked + .slider:before { transform: translateX(26px); }
     color: var(--primary-color);
     font-weight: 700;
 }
-.light-theme #nav-bar { box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); }
-.light-theme .nav-item { color: #555577; }
-.light-theme .nav-item.active { color: var(--primary-color); }
-
-/* --------------------------------- */
-/* ЭКРАН КЕЙСА (АНИМАЦИЯ) */
-/* --------------------------------- */
-
-.case-opening-area {
-    overflow: hidden;
-    position: relative;
-    height: 100px;
-    background-color: #131320;
-    border-radius: var(--border-radius);
-    border: 3px solid var(--primary-color);
-    margin-bottom: 20px;
-}
-.scroll-wrapper { position: relative; height: 100%; }
-.prize-reel {
-    display: flex;
-    align-items: center;
-    position: absolute;
-    left: 0;
-    transition: transform 5s cubic-bezier(0.1, 0.9, 0.2, 1);
-    width: max-content;
-}
-.prize-item {
-    padding: 0 5px;
-    flex-shrink: 0;
-    width: 100px; 
-    text-align: center;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.indicator {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 100%;
-    background-color: var(--star-color);
-    box-shadow: 0 0 10px var(--star-color);
-}
-.prize-image {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-}
-.case-result-box {
-    margin-top: 20px;
-    text-align: center;
-    background-color: var(--secondary-color);
-    padding: 20px;
-    border-radius: var(--border-radius);
-}
-.final-prize-image {
-    width: 90px;
-    height: 90px;
-    object-fit: contain;
-    animation: prizeGlow 1.5s infinite alternate;
-}
-@keyframes prizeGlow {
-    from { filter: drop-shadow(0 0 5px rgba(33, 150, 243, 0.5)); transform: scale(1); }
-    to { filter: drop-shadow(0 0 15px var(--primary-color)); transform: scale(1.05); }
-}
-.open-btn { width: 100%; font-size: 1.1rem; padding: 15px; }
 
