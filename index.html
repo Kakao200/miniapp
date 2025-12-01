@@ -3,164 +3,1050 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡️ Mini-App Case</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>🚀 Galaxy Casino</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="style.css?v=2025">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
-    <script src="script.js?v=14" defer></script>
+    <script src="script.js?v=2025" defer></script>
 </head>
 <body>
     <div id="app-container">
+        <!-- ФОН С ЗВЕЗДАМИ -->
+        <div id="stars-bg"></div>
+        
+        <!-- ПАРАЛЛАКС ЭФФЕКТ -->
+        <div class="parallax-layer layer-1"></div>
+        <div class="parallax-layer layer-2"></div>
+        <div class="parallax-layer layer-3"></div>
+
+        <!-- ЭКРАН ВХОДА -->
         <section id="login-screen" class="screen">
-            <div class="login-card">
-                <h2>🔑 Вход в App</h2>
-                <p>Введите код, полученный от бота:</p>
-                <input type="text" id="code-input" placeholder="Пятизначный код" maxlength="5">
-                <button onclick="login()" class="primary-btn"><i class="fas fa-sign-in-alt"></i> Войти</button>
-                <p id="login-msg" class="error-msg"></p>
+            <div class="login-container">
+                <div class="logo-animation">
+                    <div class="logo-circle pulse"></div>
+                    <h1 class="logo-title animate__animated animate__bounceIn">🚀 GALAXY CASINO</h1>
+                    <p class="logo-subtitle animate__animated animate__fadeIn">Космические приключения ждут!</p>
+                </div>
+                
+                <div class="login-card animate__animated animate__fadeInUp">
+                    <h2><i class="fas fa-key"></i> Вход в Galaxy</h2>
+                    <p class="login-desc">Введите код, полученный от бота @KakaoCasiBot</p>
+                    
+                    <div class="code-input-container">
+                        <div class="code-input-group">
+                            <i class="fas fa-shield-alt code-icon"></i>
+                            <input type="text" id="code-input" placeholder="XXXXX" maxlength="5" pattern="[0-9]*" inputmode="numeric">
+                        </div>
+                        <div class="code-hint">5 цифр</div>
+                    </div>
+                    
+                    <button id="login-btn" class="primary-btn glow-btn">
+                        <i class="fas fa-rocket"></i> СТАРТ ПРИКЛЮЧЕНИЯ
+                    </button>
+                    
+                    <div class="login-features">
+                        <div class="feature-item">
+                            <i class="fas fa-gift"></i>
+                            <span>Ежедневные бонусы</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-trophy"></i>
+                            <span>Турниры с наградами</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-users"></i>
+                            <span>Тысячи игроков</span>
+                        </div>
+                    </div>
+                    
+                    <p id="login-msg" class="error-msg"></p>
+                </div>
             </div>
         </section>
 
+        <!-- ГЛАВНЫЙ ЭКРАН -->
         <section id="main-app" class="screen hidden">
+            <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
             <header id="app-header">
-                <div class="header-balance-info">
-                    <i class="fas fa-star"></i>
-                    <span id="header-balance">100.00</span>
-                </div>
-                <div class="mode-toggle">
-                    <button id="mode-cases" class="mode-btn active" onclick="navigateToMode('home')">Кейсы</button>
-                    <button id="mode-rocket" class="mode-btn" onclick="navigateToMode('rocket')">Ракета</button>
-                </div>
-                <button onclick="logout()" class="icon-btn"><i class="fas fa-sign-out-alt"></i></button>
-            </header>
-
-            <main id="app-content">
-                
-                <div id="home-screen" class="content-view">
-                    <div id="case-grid" class="case-grid">
-                        <div class="case-card-item" data-case-id="daily" onclick="navigateTo('case')">
-                            <img src="assets/case25.png" alt="Кейс Daily Gift" class="case-img">
-                            <div class="case-price">25 <i class="fas fa-star"></i></div>
-                            <h4>Daily Gift Case</h4>
+                <!-- БАЛАНС И ПРОГРЕСС -->
+                <div class="header-left">
+                    <div class="balance-display shake-on-update" id="balance-display">
+                        <div class="balance-icon">
+                            <i class="fas fa-star star-spin"></i>
                         </div>
+                        <div class="balance-info">
+                            <div class="balance-amount" id="header-balance">1,000.00</div>
+                            <div class="balance-label">Galaxy Stars</div>
+                        </div>
+                        <button class="add-balance-btn" onclick="showAddBalanceModal()">
+                            <i class="fas fa-plus"></i>
+                        </button>
                     </div>
                     
-                    <div class="promo-banner">
-                        <p>⭐️ Больше кейсов скоро!</p>
+                    <!-- ПРОГРЕСС УРОВНЯ -->
+                    <div class="level-display">
+                        <div class="level-info">
+                            <i class="fas fa-chess-king"></i>
+                            <span>Ур. <span id="user-level">5</span></span>
+                        </div>
+                        <div class="level-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%"></div>
+                            </div>
+                            <div class="level-xp">650/1000 XP</div>
+                        </div>
                     </div>
                 </div>
 
-                <div id="rocket-screen" class="content-view hidden">
-                    <div class="rocket-game-area">
-                        <div id="graph-area" class="graph-area">
-                            <svg id="rocket-graph-svg" class="rocket-graph-svg">
-                                <polyline id="multiplier-line" fill="none" stroke="#2196F3" stroke-width="3" />
-                            </svg>
-                            <div id="rocket-multiplier" class="rocket-multiplier">x1.00</div>
-                            <img id="rocket-image" src="assets/rocket.png" alt="Ракета" class="rocket-image hidden">
-                            <div id="rocket-info" class="rocket-info">Нажмите "Ставка" для начала</div>
+                <!-- ПРАВАЯ ЧАСТЬ ХЕДЕРА -->
+                <div class="header-right">
+                    <!-- СТАТУС ПРЕМИУМА -->
+                    <div class="premium-status" id="premium-status">
+                        <i class="fas fa-crown premium-icon"></i>
+                        <div class="premium-timer" id="premium-timer">23:59</div>
+                    </div>
+                    
+                    <!-- УВЕДОМЛЕНИЯ -->
+                    <button class="notifications-btn" onclick="showNotifications()" id="notifications-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notification-count">3</span>
+                    </button>
+                    
+                    <!-- МЕНЮ -->
+                    <div class="menu-dropdown">
+                        <button class="menu-btn" onclick="toggleMenu()">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="dropdown-content" id="main-menu">
+                            <a href="#" onclick="navigateTo('daily')"><i class="fas fa-calendar-day"></i> Ежедневные награды</a>
+                            <a href="#" onclick="navigateTo('achievements')"><i class="fas fa-medal"></i> Достижения</a>
+                            <a href="#" onclick="navigateTo('settings')"><i class="fas fa-cog"></i> Настройки</a>
+                            <a href="#" onclick="showReferralModal()"><i class="fas fa-user-plus"></i> Пригласить друга</a>
+                            <a href="#" onclick="showHelp()"><i class="fas fa-question-circle"></i> Помощь</a>
+                            <a href="#" onclick="logout()" class="logout-option"><i class="fas fa-sign-out-alt"></i> Выйти</a>
                         </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- КОСМИЧЕСКАЯ НАВИГАЦИЯ -->
+            <nav id="space-nav">
+                <button class="nav-orb active" data-view="home" onclick="navigateTo('home')">
+                    <div class="orb-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <span class="orb-label">Главная</span>
+                </button>
+                
+                <button class="nav-orb" data-view="cases" onclick="navigateTo('cases')">
+                    <div class="orb-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <span class="orb-label">Кейсы</span>
+                </button>
+                
+                <button class="nav-orb" data-view="rocket" onclick="navigateTo('rocket')">
+                    <div class="orb-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <span class="orb-label">Ракета</span>
+                </button>
+                
+                <button class="nav-orb" data-view="slots" onclick="navigateTo('slots')">
+                    <div class="orb-icon">
+                        <i class="fas fa-dice"></i>
+                    </div>
+                    <span class="orb-label">Слоты</span>
+                </button>
+                
+                <button class="nav-orb" data-view="mining" onclick="navigateTo('mining')">
+                    <div class="orb-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <span class="orb-label">Майнинг</span>
+                </button>
+            </nav>
+
+            <!-- ОСНОВНОЙ КОНТЕНТ -->
+            <main id="app-content">
+                <!-- ГЛАВНЫЙ ЭКРАН -->
+                <div id="home-screen" class="content-view">
+                    <!-- ПРИВЕТСТВИЕ -->
+                    <div class="welcome-card animate__animated animate__fadeIn">
+                        <h2><i class="fas fa-hand-sparkles"></i> Добро пожаловать, <span id="welcome-username">Космонавт</span>!</h2>
+                        <p>Сегодняшняя удача: <span class="luck-indicator high">Высокая</span></p>
                         
-                        <div id="last-round-info" class="last-round-info">
-                            <p>Последний коэффициент: <span id="last-multiplier">x1.00</span></p>
-                        </div>
-
-                        <div class="bet-controls">
-                            <h3>Сделайте вашу ставку</h3>
-                            <div class="bet-quick-select">
-                                <button class="secondary-btn bet-amount-btn active" data-bet="5">5 ⭐</button>
-                                <button class="secondary-btn bet-amount-btn" data-bet="25">25 ⭐</button>
-                                <button class="secondary-btn bet-amount-btn" data-bet="100">100 ⭐</button>
+                        <!-- СТАТИСТИКА ЗА СЕССИЮ -->
+                        <div class="session-stats">
+                            <div class="stat-item">
+                                <div class="stat-value" id="today-wins">0</div>
+                                <div class="stat-label">Побед сегодня</div>
                             </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="total-wins">1,245</div>
+                                <div class="stat-label">Всего побед</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="win-rate">67%</div>
+                                <div class="stat-label">Процент побед</div>
+                            </div>
+                        </div>
+                    </div>
 
-                            <input type="number" id="bet-input" placeholder="Введите свою ставку" value="5" min="5" max="1000">
-
-                            <button id="rocket-action-btn" onclick="startRocketGame()" class="primary-btn open-btn big-btn">
-                                <i class="fas fa-rocket"></i> СДЕЛАТЬ СТАВКУ (5.00 ⭐)
+                    <!-- БЫСТРЫЕ ДЕЙСТВИЯ -->
+                    <div class="quick-actions">
+                        <h3><i class="fas fa-bolt"></i> Быстрые игры</h3>
+                        <div class="actions-grid">
+                            <button class="action-card" onclick="quickGame('rocket')">
+                                <div class="action-icon rocket">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <div class="action-title">Быстрая ракета</div>
+                                <div class="action-desc">x1.00 - x100.00</div>
+                            </button>
+                            
+                            <button class="action-card" onclick="quickGame('coinflip')">
+                                <div class="action-icon coin">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div class="action-title">Монетка</div>
+                                <div class="action-desc">50/50 на удвоение</div>
+                            </button>
+                            
+                            <button class="action-card" onclick="quickGame('dice')">
+                                <div class="action-icon dice">
+                                    <i class="fas fa-dice-six"></i>
+                                </div>
+                                <div class="action-title">Кости</div>
+                                <div class="action-desc">Больше 3.5</div>
+                            </button>
+                            
+                            <button class="action-card" onclick="quickGame('wheel')">
+                                <div class="action-icon wheel">
+                                    <i class="fas fa-compact-disc"></i>
+                                </div>
+                                <div class="action-title">Колесо удачи</div>
+                                <div class="action-desc">x1 - x10</div>
                             </button>
                         </div>
                     </div>
-                </div>
 
-                <div id="case-screen" class="content-view hidden">
-                    <div class="back-link" onclick="navigateTo('home')"><i class="fas fa-chevron-left"></i> Назад</div>
-
-                    <h2>Daily Gift Case</h2>
-                    
-                    <div class="case-opening-area">
-                        <div class="scroll-wrapper">
-                            <div id="prize-scroll-reel" class="prize-reel"></div>
-                            <div class="indicator"></div>
+                    <!-- РЕКОМЕНДУЕМЫЕ КЕЙСЫ -->
+                    <div class="featured-cases">
+                        <div class="section-header">
+                            <h3><i class="fas fa-fire"></i> Горячие кейсы</h3>
+                            <button class="view-all-btn" onclick="navigateTo('cases')">Все кейсы →</button>
+                        </div>
+                        
+                        <div class="cases-scroll">
+                            <div class="case-preview featured" onclick="openCasePreview('legendary')">
+                                <div class="case-badge legendary">LEGENDARY</div>
+                                <img src="assets/cases/legendary.png" alt="Легендарный кейс" class="case-preview-img">
+                                <div class="case-preview-info">
+                                    <h4>Космический Легендарный</h4>
+                                    <div class="case-price">1,000 <i class="fas fa-star"></i></div>
+                                    <div class="case-chance">Шанс x100: 0.1%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="case-preview" onclick="openCasePreview('epic')">
+                                <div class="case-badge epic">EPIC</div>
+                                <img src="assets/cases/epic.png" alt="Эпический кейс" class="case-preview-img">
+                                <div class="case-preview-info">
+                                    <h4>Галактический Эпический</h4>
+                                    <div class="case-price">500 <i class="fas fa-star"></i></div>
+                                    <div class="case-chance">Шанс x50: 1%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="case-preview" onclick="openCasePreview('rare')">
+                                <div class="case-badge rare">RARE</div>
+                                <img src="assets/cases/rare.png" alt="Редкий кейс" class="case-preview-img">
+                                <div class="case-preview-info">
+                                    <h4>Редкий Звёздный</h4>
+                                    <div class="case-price">250 <i class="fas fa-star"></i></div>
+                                    <div class="case-chance">Шанс x20: 5%</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="case-buttons">
-                        <button id="demo-case-btn" onclick="openCase(true)" class="secondary-btn small-btn"><i class="fas fa-redo"></i> ДЕМО РЕЖИМ</button>
+                    <!-- АКТИВНЫЕ ИВЕНТЫ -->
+                    <div class="active-events">
+                        <h3><i class="fas fa-calendar-star"></i> Активные события</h3>
+                        <div class="event-list">
+                            <div class="event-card event-live">
+                                <div class="event-icon">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div class="event-info">
+                                    <div class="event-title">ВЕЧЕРНИЙ БУСТ</div>
+                                    <div class="event-desc">+25% к выигрышам до 00:00</div>
+                                    <div class="event-timer">3:45:12</div>
+                                </div>
+                            </div>
+                            
+                            <div class="event-card event-upcoming">
+                                <div class="event-icon">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <div class="event-info">
+                                    <div class="event-title">ТУРНИР ВЫЖИВАНИЯ</div>
+                                    <div class="event-desc">Начнётся через 2 часа</div>
+                                    <div class="event-timer">Призовой фонд: 10,000 ⭐</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ТОП ИГРОКОВ НА ГЛАВНОЙ -->
+                    <div class="home-top-players">
+                        <h3><i class="fas fa-crown"></i> Лидеры дня</h3>
+                        <div class="top-players-list">
+                            <div class="top-player first">
+                                <div class="player-rank">🥇</div>
+                                <div class="player-avatar">
+                                    <i class="fas fa-user-astronaut"></i>
+                                </div>
+                                <div class="player-info">
+                                    <div class="player-name">SpaceKing</div>
+                                    <div class="player-wins">+12,450 ⭐</div>
+                                </div>
+                            </div>
+                            
+                            <div class="top-player second">
+                                <div class="player-rank">🥈</div>
+                                <div class="player-avatar">
+                                    <i class="fas fa-user-ninja"></i>
+                                </div>
+                                <div class="player-info">
+                                    <div class="player-name">GalaxyNinja</div>
+                                    <div class="player-wins">+9,870 ⭐</div>
+                                </div>
+                            </div>
+                            
+                            <div class="top-player third">
+                                <div class="player-rank">🥉</div>
+                                <div class="player-avatar">
+                                    <i class="fas fa-user-robot"></i>
+                                </div>
+                                <div class="player-info">
+                                    <div class="player-name">CosmoBot</div>
+                                    <div class="player-wins">+8,120 ⭐</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ЭКРАН ВСЕХ КЕЙСОВ -->
+                <div id="cases-screen" class="content-view hidden">
+                    <div class="cases-header">
+                        <h2><i class="fas fa-box-open"></i> Космические Кейсы</h2>
+                        <p>Откройте свою удачу среди звёзд!</p>
+                    </div>
+
+                    <!-- ФИЛЬТРЫ КЕЙСОВ -->
+                    <div class="cases-filter">
+                        <button class="filter-btn active" data-filter="all">Все</button>
+                        <button class="filter-btn" data-filter="free">Бесплатные</button>
+                        <button class="filter-btn" data-filter="premium">Премиум</button>
+                        <button class="filter-btn" data-filter="nft">NFT</button>
+                        <button class="filter-btn" data-filter="special">Специальные</button>
+                    </div>
+
+                    <!-- КАТЕГОРИИ КЕЙСОВ -->
+                    <div class="cases-categories">
+                        <!-- БЕСПЛАТНЫЕ КЕЙСЫ -->
+                        <div class="category-section" id="category-free">
+                            <h3><i class="fas fa-gift"></i> Бесплатные кейсы</h3>
+                            <div class="cases-grid">
+                                <div class="case-card free" onclick="openCaseModal('daily')">
+                                    <div class="case-tag free-tag">FREE</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/free1.png" alt="Ежедневный кейс">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>Ежедневный подарок</h4>
+                                        <p>Открывается раз в 24 часа</p>
+                                        <div class="case-price">0 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">Пусто: 40%</span>
+                                            <span class="odds-item">Сердце: 30%</span>
+                                            <span class="odds-item">Мишка: 30%</span>
+                                        </div>
+                                        <button class="open-case-btn free">ОТКРЫТЬ БЕСПЛАТНО</button>
+                                    </div>
+                                </div>
+
+                                <div class="case-card free" onclick="openCaseModal('hourly')">
+                                    <div class="case-tag free-tag">FREE</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/free2.png" alt="Часовой кейс">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>Часовой сюрприз</h4>
+                                        <p>Каждый час новый шанс</p>
+                                        <div class="case-price">0 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">Пусто: 60%</span>
+                                            <span class="odds-item">Цветок: 25%</span>
+                                            <span class="odds-item">Леденец: 15%</span>
+                                        </div>
+                                        <button class="open-case-btn free">ОТКРЫТЬ БЕСПЛАТНО</button>
+                                    </div>
+                                </div>
+
+                                <div class="case-card free" onclick="openCaseModal('starter')">
+                                    <div class="case-tag free-tag">FREE</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/free3.png" alt="Стартовый кейс">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>Стартовый набор</h4>
+                                        <p>Для новых космонавтов</p>
+                                        <div class="case-price">0 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">Подарок: 40%</span>
+                                            <span class="odds-item">Роза: 35%</span>
+                                            <span class="odds-item">Мишка: 25%</span>
+                                        </div>
+                                        <button class="open-case-btn free">ОТКРЫТЬ БЕСПЛАТНО</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ОСНОВНЫЕ КЕЙСЫ -->
+                        <div class="category-section" id="category-basic">
+                            <h3><i class="fas fa-star"></i> Основные кейсы</h3>
+                            <div class="cases-grid">
+                                <div class="case-card basic" onclick="openCaseModal('common')">
+                                    <div class="case-tag common-tag">COMMON</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/common.png" alt="Обычный кейс">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>Обычный звёздный</h4>
+                                        <p>Базовые награды</p>
+                                        <div class="case-price">25 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">🐻 Мишка: 30%</span>
+                                            <span class="odds-item">❤️ Сердце: 25%</span>
+                                            <span class="odds-item">🌹 Роза: 20%</span>
+                                            <span class="odds-item">🎁 Подарок: 15%</span>
+                                            <span class="odds-item">🍭 Леденец: 5%</span>
+                                            <span class="odds-item">🌼 Цветок: 5%</span>
+                                        </div>
+                                        <button class="open-case-btn">ОТКРЫТЬ ЗА 25 ⭐</button>
+                                    </div>
+                                </div>
+
+                                <div class="case-card basic" onclick="openCaseModal('rare')">
+                                    <div class="case-tag rare-tag">RARE</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/rare.png" alt="Редкий кейс">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>Редкий галактический</h4>
+                                        <p>Улучшенные награды</p>
+                                        <div class="case-price">100 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">🐻 Мишка: 25%</span>
+                                            <span class="odds-item">❤️ Сердце: 25%</span>
+                                            <span class="odds-item">🌹 Роза: 20%</span>
+                                            <span class="odds-item">🎁 Подарок: 15%</span>
+                                            <span class="odds-item">⭐ Звезда: 10%</span>
+                                            <span class="odds-item">👑 Корона: 5%</span>
+                                        </div>
+                                        <button class="open-case-btn">ОТКРЫТЬ ЗА 100 ⭐</button>
+                                    </div>
+                                </div>
+
+                                <div class="case-card basic" onclick="openCaseModal('epic')">
+                                    <div class="case-tag epic-tag">EPIC</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/epic.png" alt="Эпический кейс">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>Эпический космический</h4>
+                                        <p>Эксклюзивные призы</p>
+                                        <div class="case-price">250 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">🚀 Ракета: 20%</span>
+                                            <span class="odds-item">🪐 Планета: 20%</span>
+                                            <span class="odds-item">⭐ Звезда: 25%</span>
+                                            <span class="odds-item">👑 Корона: 15%</span>
+                                            <span class="odds-item">💎 Алмаз: 10%</span>
+                                            <span class="odds-item">👽 Инопланетянин: 10%</span>
+                                        </div>
+                                        <button class="open-case-btn">ОТКРЫТЬ ЗА 250 ⭐</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NFT КЕЙСЫ -->
+                        <div class="category-section" id="category-nft">
+                            <h3><i class="fas fa-palette"></i> NFT Коллекции</h3>
+                            <div class="cases-grid">
+                                <div class="case-card nft" onclick="openCaseModal('nft_common')">
+                                    <div class="case-tag nft-tag">NFT</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/nft1.png" alt="NFT Common">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>NFT Стартовый набор</h4>
+                                        <p>Базовые NFT-карточки</p>
+                                        <div class="case-price">500 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">🌌 NFT Common: 70%</span>
+                                            <span class="odds-item">✨ NFT Rare: 20%</span>
+                                            <span class="odds-item">🌟 NFT Epic: 8%</span>
+                                            <span class="odds-item">💫 NFT Legendary: 2%</span>
+                                        </div>
+                                        <button class="open-case-btn nft">ОТКРЫТЬ NFT КЕЙС</button>
+                                    </div>
+                                </div>
+
+                                <div class="case-card nft" onclick="openCaseModal('nft_rare')">
+                                    <div class="case-tag nft-tag">NFT</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/nft2.png" alt="NFT Rare">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>NFT Галактическая серия</h4>
+                                        <p>Редкие космические NFT</p>
+                                        <div class="case-price">1,000 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">✨ NFT Rare: 60%</span>
+                                            <span class="odds-item">🌟 NFT Epic: 25%</span>
+                                            <span class="odds-item">💫 NFT Legendary: 10%</span>
+                                            <span class="odds-item">👑 NFT Mythic: 5%</span>
+                                        </div>
+                                        <button class="open-case-btn nft">ОТКРЫТЬ NFT КЕЙС</button>
+                                    </div>
+                                </div>
+
+                                <div class="case-card nft" onclick="openCaseModal('nft_legendary')">
+                                    <div class="case-tag nft-tag">NFT</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/nft3.png" alt="NFT Legendary">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>NFT Легендарная коллекция</h4>
+                                        <p>Уникальные шедевры</p>
+                                        <div class="case-price">2,500 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">🌟 NFT Epic: 50%</span>
+                                            <span class="odds-item">💫 NFT Legendary: 30%</span>
+                                            <span class="odds-item">👑 NFT Mythic: 15%</span>
+                                            <span class="odds-item">🔥 NFT Unique: 5%</span>
+                                        </div>
+                                        <button class="open-case-btn nft">ОТКРЫТЬ NFT КЕЙС</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ПРЕМИУМ КЕЙСЫ -->
+                        <div class="category-section" id="category-premium">
+                            <h3><i class="fas fa-crown"></i> Премиум кейсы</h3>
+                            <div class="cases-grid">
+                                <div class="case-card premium" onclick="openCaseModal('premium_weekly')">
+                                    <div class="case-tag premium-tag">PREMIUM</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/premium1.png" alt="Премиум недельный">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>Недельный премиум</h4>
+                                        <p>Эксклюзив на 7 дней</p>
+                                        <div class="case-price">750 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">⭐ x10 Звёзд: 30%</span>
+                                            <span class="odds-item">👑 x25 Корона: 25%</span>
+                                            <span class="odds-item">💎 x50 Алмаз: 20%</span>
+                                            <span class="odds-item">🚀 x100 Ракета: 15%</span>
+                                            <span class="odds-item">👽 x250 Инопланетянин: 10%</span>
+                                        </div>
+                                        <button class="open-case-btn premium">ОТКРЫТЬ ПРЕМИУМ</button>
+                                    </div>
+                                </div>
+
+                                <div class="case-card premium" onclick="openCaseModal('premium_monthly')">
+                                    <div class="case-tag premium-tag">PREMIUM</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/premium2.png" alt="Премиум месячный">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>Месячный премиум</h4>
+                                        <p>30 дней эксклюзива</p>
+                                        <div class="case-price">2,500 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">👑 x50 Корона: 30%</span>
+                                            <span class="odds-item">💎 x100 Алмаз: 25%</span>
+                                            <span class="odds-item">🚀 x250 Ракета: 20%</span>
+                                            <span class="odds-item">👽 x500 Инопланетянин: 15%</span>
+                                            <span class="odds-item">🪐 x1000 Планета: 10%</span>
+                                        </div>
+                                        <button class="open-case-btn premium">ОТКРЫТЬ ПРЕМИУМ</button>
+                                    </div>
+                                </div>
+
+                                <div class="case-card premium" onclick="openCaseModal('premium_legendary')">
+                                    <div class="case-tag premium-tag">PREMIUM</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/premium3.png" alt="Легендарный премиум">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>Легендарный премиум</h4>
+                                        <p>Ультра-редкие награды</p>
+                                        <div class="case-price">5,000 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">💎 x250 Алмаз: 25%</span>
+                                            <span class="odds-item">🚀 x500 Ракета: 20%</span>
+                                            <span class="odds-item">👽 x1000 Инопланетянин: 15%</span>
+                                            <span class="odds-item">🪐 x2500 Планета: 10%</span>
+                                            <span class="odds-item">⭐ x5000 Звёздный дождь: 5%</span>
+                                            <span class="odds-item">👑 x10000 Королевский приз: 25%</span>
+                                        </div>
+                                        <button class="open-case-btn premium">ОТКРЫТЬ ЛЕГЕНДУ</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- СПЕЦИАЛЬНЫЕ КЕЙСЫ -->
+                        <div class="category-section" id="category-special">
+                            <h3><i class="fas fa-bolt"></i> Специальные кейсы</h3>
+                            <div class="cases-grid">
+                                <div class="case-card special" onclick="openCaseModal('mystery')">
+                                    <div class="case-tag mystery-tag">MYSTERY</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/mystery.png" alt="Мистери кейс">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>Мистери кейс</h4>
+                                        <p>Случайная награда любой редкости</p>
+                                        <div class="case-price">150 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">Common: 40%</span>
+                                            <span class="odds-item">Rare: 30%</span>
+                                            <span class="odds-item">Epic: 20%</span>
+                                            <span class="odds-item">Legendary: 10%</span>
+                                        </div>
+                                        <button class="open-case-btn special">ОТКРЫТЬ ТАЙНУ</button>
+                                    </div>
+                                </div>
+
+                                <div class="case-card special" onclick="openCaseModal('jackpot')">
+                                    <div class="case-tag jackpot-tag">JACKPOT</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/jackpot.png" alt="Джекпот кейс">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>Джекпот кейс</h4>
+                                        <p>Шанс выиграть джекпот 10,000 ⭐</p>
+                                        <div class="case-price">500 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">x2: 50%</span>
+                                            <span class="odds-item">x5: 25%</span>
+                                            <span class="odds-item">x10: 15%</span>
+                                            <span class="odds-item">x100: 9%</span>
+                                            <span class="odds-item">ДЖЕКПОТ: 1%</span>
+                                        </div>
+                                        <button class="open-case-btn special">ИСПЫТАТЬ УДАЧУ</button>
+                                    </div>
+                                </div>
+
+                                <div class="case-card special" onclick="openCaseModal('seasonal')">
+                                    <div class="case-tag seasonal-tag">SEASONAL</div>
+                                    <div class="case-image">
+                                        <img src="assets/cases/seasonal.png" alt="Сезонный кейс">
+                                    </div>
+                                    <div class="case-info">
+                                        <h4>Сезонный кейс</h4>
+                                        <p>Эксклюзивные сезонные награды</p>
+                                        <div class="case-price">350 <i class="fas fa-star"></i></div>
+                                        <div class="case-odds">
+                                            <span class="odds-item">Обычный: 45%</span>
+                                            <span class="odds-item">Редкий: 30%</span>
+                                            <span class="odds-item">Эпический: 15%</span>
+                                            <span class="odds-item">Легендарный: 10%</span>
+                                        </div>
+                                        <button class="open-case-btn special">СЕЗОННЫЙ КЕЙС</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ЭКРАН РАКЕТЫ -->
+                <div id="rocket-screen" class="content-view hidden">
+                    <div class="rocket-header">
+                        <h2><i class="fas fa-rocket"></i> Galaxy Rocket</h2>
+                        <p class="rocket-subtitle">Заберите выигрыш до взлёта!</p>
+                    </div>
+
+                    <!-- ГРАФИК И ИГРОВОЕ ПОЛЕ -->
+                    <div class="rocket-game-container">
+                        <div id="graph-container" class="graph-container">
+                            <div class="graph-background">
+                                <!-- СЕТКА ГРАФИКА -->
+                                <div class="grid-lines">
+                                    <div class="grid-line" style="bottom: 0%"></div>
+                                    <div class="grid-line" style="bottom: 25%"></div>
+                                    <div class="grid-line" style="bottom: 50%"></div>
+                                    <div class="grid-line" style="bottom: 75%"></div>
+                                    <div class="grid-line" style="bottom: 100%"></div>
+                                </div>
+                                
+                                <!-- МАСШТАБ КОЭФФИЦИЕНТОВ -->
+                                <div class="multiplier-scale">
+                                    <div class="scale-mark" style="bottom: 0">x1.00</div>
+                                    <div class="scale-mark" style="bottom: 25%">x1.50</div>
+                                    <div class="scale-mark" style="bottom: 50%">x2.00</div>
+                                    <div class="scale-mark" style="bottom: 75%">x3.00</div>
+                                    <div class="scale-mark" style="bottom: 100%">x5.00+</div>
+                                </div>
+                                
+                                <!-- ГРАФИК -->
+                                <svg id="rocket-graph" class="rocket-graph">
+                                    <path id="graph-line" d="M0,300" fill="none" stroke="url(#rocket-gradient)" stroke-width="3"/>
+                                </svg>
+                                
+                                <!-- ГРАДИЕНТ ДЛЯ ГРАФИКА -->
+                                <svg width="0" height="0">
+                                    <defs>
+                                        <linearGradient id="rocket-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stop-color="#4facfe" />
+                                            <stop offset="100%" stop-color="#00f2fe" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                
+                                <!-- РАКЕТА -->
+                                <div id="rocket" class="rocket-object">
+                                    <i class="fas fa-rocket rocket-icon"></i>
+                                </div>
+                                
+                                <!-- ТЕКУЩИЙ КОЭФФИЦИЕНТ -->
+                                <div id="current-multiplier" class="current-multiplier">
+                                    <span id="multiplier-value">x1.00</span>
+                                </div>
+                                
+                                <!-- ИНДИКАТОР СТАВКИ -->
+                                <div id="bet-indicator" class="bet-indicator">
+                                    <div class="bet-amount-display">
+                                        <i class="fas fa-coins"></i>
+                                        <span id="bet-amount">5.00</span> ⭐
+                                    </div>
+                                    <div class="potential-win">
+                                        Выигрыш: <span id="potential-win">5.00</span> ⭐
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         
-                        <button id="open-case-btn" onclick="openCase(false)" class="primary-btn open-btn big-btn"><i class="fas fa-key"></i> ОТКРЫТЬ (25 ⭐)</button>
+                        <!-- СТАТИСТИКА ИГРЫ -->
+                        <div class="rocket-stats">
+                            <div class="stat-box">
+                                <div class="stat-title">Макс. коэф.</div>
+                                <div class="stat-value" id="max-multiplier">x1.00</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-title">Время полёта</div>
+                                <div class="stat-value" id="flight-time">0.0s</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-title">Высота</div>
+                                <div class="stat-value" id="altitude">0 км</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-title">Скорость</div>
+                                <div class="stat-value" id="rocket-speed">0 км/с</div>
+                            </div>
+                        </div>
+                        
+                        <!-- ИСТОРИЯ ПОЛЁТОВ -->
+                        <div class="flight-history">
+                            <h4><i class="fas fa-history"></i> История полётов</h4>
+                            <div class="history-list" id="flight-history">
+                                <div class="history-item crash">x1.24</div>
+                                <div class="history-item cashout">x3.45</div>
+                                <div class="history-item crash">x2.12</div>
+                                <div class="history-item cashout">x5.67</div>
+                                <div class="history-item crash">x1.89</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div id="case-result-box" class="case-result-box hidden">
-                        <h3>🎉 Ваш приз!</h3>
-                        <div id="result-emoji" class="result-emoji-display"></div>
-                        <p id="result-msg"></p>
+                    <!-- УПРАВЛЕНИЕ СТАВКАМИ -->
+                    <div class="betting-panel">
+                        <div class="bet-controls">
+                            <h4><i class="fas fa-sliders-h"></i> Управление ставкой</h4>
+                            
+                            <!-- БЫСТРЫЕ СТАВКИ -->
+                            <div class="quick-bets">
+                                <button class="bet-chip" data-bet="5">5 ⭐</button>
+                                <button class="bet-chip" data-bet="25">25 ⭐</button>
+                                <button class="bet-chip" data-bet="50">50 ⭐</button>
+                                <button class="bet-chip" data-bet="100">100 ⭐</button>
+                                <button class="bet-chip" data-bet="250">250 ⭐</button>
+                                <button class="bet-chip" data-bet="500">500 ⭐</button>
+                            </div>
+                            
+                            <!-- РУЧНОЙ ВВОД -->
+                            <div class="manual-bet">
+                                <div class="bet-input-group">
+                                    <i class="fas fa-coins"></i>
+                                    <input type="number" id="rocket-bet-input" min="5" max="10000" step="5" value="5">
+                                    <div class="bet-buttons">
+                                        <button class="bet-modify" onclick="modifyBet(-5)">-5</button>
+                                        <button class="bet-modify" onclick="modifyBet(5)">+5</button>
+                                        <button class="bet-modify" onclick="modifyBet(25)">+25</button>
+                                        <button class="bet-modify" onclick="modifyBet(100)">+100</button>
+                                    </div>
+                                </div>
+                                <div class="bet-limits">
+                                    Мин: 5 ⭐ | Макс: 10,000 ⭐
+                                </div>
+                            </div>
+                            
+                            <!-- АВТО-КЭШАУТ -->
+                            <div class="auto-cashout">
+                                <h5><i class="fas fa-robot"></i> Авто-кэшаут</h5>
+                                <div class="auto-cashout-control">
+                                    <input type="range" id="auto-cashout-slider" min="1.1" max="10" step="0.1" value="2.0">
+                                    <div class="auto-cashout-value">
+                                        <span id="auto-cashout-value">x2.0</span>
+                                    </div>
+                                </div>
+                                <button id="toggle-auto-cashout" class="secondary-btn small-btn">
+                                    <i class="fas fa-power-off"></i> Включить авто-кэшаут
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- КНОПКА ИГРЫ -->
+                        <div class="game-action">
+                            <button id="rocket-action-btn" class="rocket-action-btn" onclick="startRocketGame()">
+                                <div class="action-content">
+                                    <i class="fas fa-play"></i>
+                                    <div class="action-text">
+                                        <div class="action-title">ЗАПУСТИТЬ РАКЕТУ</div>
+                                        <div class="action-subtitle" id="action-subtitle">Ставка: 5.00 ⭐</div>
+                                    </div>
+                                </div>
+                            </button>
+                            
+                            <!-- ДОПОЛНИТЕЛЬНЫЕ ФУНКЦИИ -->
+                            <div class="extra-features">
+                                <button class="feature-btn" onclick="doubleBet()">
+                                    <i class="fas fa-redo"></i> Удвоить
+                                </button>
+                                <button class="feature-btn" onclick="halfBet()">
+                                    <i class="fas fa-divide"></i> Половинка
+                                </button>
+                                <button class="feature-btn" onclick="placeMaxBet()">
+                                    <i class="fas fa-arrow-up"></i> Макс
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div id="probabilities-box" class="probabilities-box">
-                        <h3>ВЫ МОЖЕТЕ ВЫИГРАТЬ:</h3>
-                        <p>🐻 Мишка — 30%</p>  
-                        <p>❤️ Сердце — 25%</p>   
-                        <p>🌹 Роза — 20%</p>   
-                        <p>🎁 Подарок — 15%</p>  
-                        <p>🍭 Леденец — 5%</p>   
-                        <p>🌼 Цветок — 5%</p>   
+
+                    <!-- РУКОВОДСТВО ПО ИГРЕ -->
+                    <div class="game-guide">
+                        <h4><i class="fas fa-info-circle"></i> Как играть в Rocket?</h4>
+                        <div class="guide-steps">
+                            <div class="guide-step">
+                                <div class="step-number">1</div>
+                                <p>Поставьте желаемую сумму</p>
+                            </div>
+                            <div class="guide-step">
+                                <div class="step-number">2</div>
+                                <p>Нажмите "Запустить ракету"</p>
+                            </div>
+                            <div class="guide-step">
+                                <div class="step-number">3</div>
+                                <p>Наблюдайте за полётом</p>
+                            </div>
+                            <div class="guide-step">
+                                <div class="step-number">4</div>
+                                <p>Заберите выигрыш до взрыва</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div id="inventory-screen" class="content-view hidden">
-                    <h2>📦 Инвентарь</h2>
-                    <div class="placeholder-card">
-                        <p>Ваши выигранные предметы появятся здесь.</p>
-                    </div>
-                </div>
-
-                <div id="top-screen" class="content-view hidden">
-                    <h2>🏆 Топ Игроков</h2>
-                    <div class="placeholder-card">
-                        <p>Таблица лидеров (по выигрышу) скоро будет доступна.</p>
-                    </div>
-                </div>
-
-                <div id="profile-screen" class="content-view hidden">
-                    <div class="back-link" onclick="navigateTo('home')"><i class="fas fa-chevron-left"></i> Назад</div>
-                    <h2>👤 Мой Профиль</h2>
-                    <div class="profile-details-card">
-                        <p><strong>Имя/Логин:</strong> <span id="profile-username"></span></p>
-                        <p><strong>ID в Telegram:</strong> <span id="profile-id"></span></p>
-                        <p><strong>Баланс:</strong> <span id="profile-balance">0.00 <i class="fas fa-star"></i></span></p>
-                    </div>
-
-                    <h3>Статистика</h3>
-                    <div class="stats-card">
-                        <p>Открыто кейсов: 0</p>
-                        <p>Получено призов: 0</p>
-                    </div>
-
-                    <button onclick="logout()" class="secondary-btn full-width-btn"><i class="fas fa-sign-out-alt"></i> Выйти из аккаунта</button>
-                </div>
-
+                <!-- ДРУГИЕ РАЗДЕЛЫ (СЛОТЫ, МАЙНИНГ И Т.Д.) -->
+                <!-- Эти разделы будут реализованы в script.js -->
             </main>
-            
-            <nav id="nav-bar">
-                <button class="nav-item active" data-view="home"><i class="fas fa-home"></i> Главная</button>
-                <button class="nav-item" data-view="inventory"><i class="fas fa-archive"></i> Инвентарь</button>
-                <button class="nav-item" data-view="top"><i class="fas fa-trophy"></i> Топ</button>
-                <button class="nav-item" data-view="profile"><i class="fas fa-user-circle"></i> Профиль</button>
-            </nav>
+
+            <!-- НИЖНИЙ СТАТУС БАР -->
+            <footer id="status-bar">
+                <div class="status-item">
+                    <i class="fas fa-user-astronaut"></i>
+                    <span id="online-count">1,245</span> онлайн
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-gift"></i>
+                    <span id="jackpot-amount">25,678</span> ⭐ в джекпоте
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-fire"></i>
+                    <span id="hot-streak">7</span> горячих полос
+                </div>
+            </footer>
         </section>
     </div>
+
+    <!-- МОДАЛЬНЫЕ ОКНА -->
+    
+    <!-- МОДАЛЬНОЕ ОКНО КЕЙСА -->
+    <div id="case-modal" class="modal hidden">
+        <div class="modal-content case-modal-content">
+            <div class="modal-header">
+                <h3 id="modal-case-title">Кейс</h3>
+                <button class="close-modal" onclick="closeCaseModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="case-modal-preview">
+                    <img id="modal-case-image" src="" alt="Кейс">
+                </div>
+                <div class="case-modal-info">
+                    <div class="case-modal-price">
+                        <span id="modal-case-price">0</span> <i class="fas fa-star"></i>
+                    </div>
+                    <p id="modal-case-desc">Описание кейса</p>
+                </div>
+                <div class="case-modal-odds">
+                    <h4>Шансы выпадения:</h4>
+                    <div id="modal-odds-list" class="odds-list">
+                        <!-- Заполнится через JS -->
+                    </div>
+                </div>
+                <div class="case-modal-actions">
+                    <button id="modal-open-btn" class="primary-btn big-btn" onclick="openSelectedCase()">
+                        ОТКРЫТЬ КЕЙС
+                    </button>
+                    <button class="secondary-btn" onclick="openCaseDemo()">
+                        ДЕМО-РЕЖИМ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО РЕЗУЛЬТАТА -->
+    <div id="result-modal" class="modal hidden">
+        <div class="modal-content result-modal-content">
+            <div class="result-header">
+                <div class="result-title">🎉 ВЫ ВЫИГРАЛИ!</div>
+                <button class="close-modal" onclick="closeResultModal()">&times;</button>
+            </div>
+            <div class="result-body">
+                <div class="result-prize">
+                    <img id="result-prize-image" src="" alt="Приз">
+                    <div class="result-prize-name" id="result-prize-name">Приз</div>
+                    <div class="result-prize-value" id="result-prize-value">0 ⭐</div>
+                </div>
+                <div class="result-message" id="result-message">
+                    Поздравляем с выигрышем!
+                </div>
+                <div class="result-actions">
+                    <button class="primary-btn" onclick="shareResult()">
+                        <i class="fas fa-share-alt"></i> Поделиться
+                    </button>
+                    <button class="secondary-btn" onclick="openAgain()">
+                        Открыть ещё
+                    </button>
+                    <button class="secondary-btn" onclick="closeResultModal()">
+                        Продолжить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ПОПОЛНЕНИЯ -->
+    <div id="add-balance-modal" class="modal hidden">
+        <div class="modal-content balance-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-coins"></i> Пополнить баланс</h3>
+                <button class="close-modal" onclick="closeAddBalanceModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="balance-packages">
+                    <div class="package" onclick="selectPackage(100)">
+                        <div class="package-amount">100 ⭐</div>
+                        <div class="package-price">Бесплатно</div>
+                        <div class="package-bonus">+0% бонус</div>
+                    </div>
+                    <div class="package popular" onclick="selectPackage(500)">
+                        <div class="package-amount">500 ⭐</div>
+                        <div class="package-price">$4.99</div>
+                        <div class="package-bonus">+10% бонус</div>
+                    </div>
+                    <div class="package" onclick="selectPackage(1000)">
+                        <div class="package-amount">1,000 ⭐</div>
+                        <div class="package-price">$9.99</div>
+                        <div class="package-bonus">+25% бонус</div>
+                    </div>
+                    <div class="package" onclick="selectPackage(5000)">
+                        <div class="package-amount">5,000 ⭐</div>
+                        <div class="package-price">$44.99</div>
+                        <div class="package-bonus">+50% бонус</div>
+                    </div>
+                </div>
+                <button class="primary-btn full-width-btn" onclick="processPayment()">
+                    <i class="fas fa-shopping-cart"></i> ПРИОБРЕСТИ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- УВЕДОМЛЕНИЯ -->
+    <div id="notifications-panel" class="hidden">
+        <div class="notifications-header">
+            <h4><i class="fas fa-bell"></i> Уведомления</h4>
+            <button onclick="closeNotifications()">&times;</button>
+        </div>
+        <div class="notifications-list">
+            <div class="notification unread">
+                <div class="notification-icon success">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Ежедневный бонус готов!</div>
+                    <div class="notification-time">2 минуты назад</div>
+                </div>
+            </div>
+            <div class="notification">
+                <div class="notification-icon info">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Новый турнир начинается</div>
+                    <div class="notification-time">1 час назад</div>
+                </div>
+            </div>
+            <div class="notification">
+                <div class="notification-icon warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Заканчивается премиум</div>
+                    <div class="notification-time">3 часа назад</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- АНИМАЦИЯ ЗВЕЗДНОГО ДОЖДЯ -->
+    <div id="star-rain" class="hidden"></div>
 </body>
 </html>
-
