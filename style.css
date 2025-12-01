@@ -3,17 +3,19 @@
     --bg-color: #1a1a2e; /* Темный фон */
     --card-color: #2c2c44; /* Фон карточек */
     --text-color: #ffffff; /* Светлый текст */
-    --primary-color: #e94560; /* Акцент (Красный/Розовый) */
-    --secondary-color: #0f3460; /* Дополнительный (Синий) */
+    --primary-color: #2196F3; /* Акцент (Синий) */
+    --secondary-color: #0f3460; /* Дополнительный (Темно-синий) */
     --nav-bar-color: #1c1c38; /* Фон навигации */
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     --border-radius: 12px;
+    --star-color: #ffc107; /* Золотая звезда */
 
     /* Светлая Тема (Неактивно по умолчанию) */
     --light-bg-color: #f0f2f5;
     --light-card-color: #ffffff;
     --light-text-color: #1a1a2e;
     --light-nav-bar-color: #ffffff;
+    --light-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Светлая Тема (Класс) */
@@ -22,7 +24,7 @@
     --card-color: var(--light-card-color);
     --text-color: var(--light-text-color);
     --nav-bar-color: var(--light-nav-bar-color);
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow: var(--light-shadow);
 }
 
 body {
@@ -70,12 +72,13 @@ button {
 button:active { transform: scale(0.98); }
 
 .primary-btn { background-color: var(--primary-color); color: var(--text-color); }
-.primary-btn:hover { background-color: #ff6a80; }
+.primary-btn:hover { background-color: #4a9ff7; }
+.big-btn { padding: 15px 20px; font-size: 1.1rem; }
 
 .secondary-btn { background-color: var(--secondary-color); color: var(--text-color); }
 
 .icon-btn {
-    background: var(--secondary-color);
+    background: none;
     border: none;
     color: var(--text-color);
     padding: 8px;
@@ -83,15 +86,12 @@ button:active { transform: scale(0.98); }
     height: 40px;
     border-radius: 50%;
     margin-left: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-.icon-btn:hover { background-color: #3b5a7a; }
+.icon-btn:hover { background-color: rgba(255, 255, 255, 0.1); }
 .light-theme .icon-btn { 
-    background-color: #e0e0e0;
     color: var(--light-text-color);
 }
-.light-theme .icon-btn:hover { background-color: #d0d0d0; }
-
+.light-theme .icon-btn:hover { background-color: #e0e0e0; }
 
 .full-width-btn { width: 100%; margin-top: 15px; }
 
@@ -107,7 +107,9 @@ input[type="text"] {
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
+/* --------------------------------- */
 /* Хедер (Верхняя Панель) */
+/* --------------------------------- */
 #app-header {
     display: flex;
     justify-content: space-between;
@@ -120,39 +122,35 @@ input[type="text"] {
     z-index: 10;
     transition: background-color 0.3s, border-color 0.3s;
 }
+.light-theme #app-header { border-bottom: 1px solid #d0d0d0; }
+
 
 .header-left, .header-right { display: flex; align-items: center; }
 .balance-info { 
     display: flex; 
     align-items: center; 
     font-weight: 700; 
-    background-color: var(--secondary-color);
+    background-color: #4CAF50; /* Зеленый для баланса */
     padding: 8px 12px;
     border-radius: 20px;
     font-size: 0.95rem;
-    color: #ffc107; /* Золотой цвет для баланса */
+    color: var(--text-color);
 }
-.balance-info i { margin-right: 8px; color: #ffc107; }
+.balance-info i { margin-right: 8px; color: #ffeb3b; }
 
-.light-theme #app-header { border-bottom: 1px solid #d0d0d0; }
-.light-theme .balance-info { background-color: #e0e0e0; color: #cc7800; }
+.light-theme .balance-info { background-color: #81C784; color: var(--light-text-color); }
 
-/* Контент */
+
+/* --------------------------------- */
+/* Контент и Карточки */
+/* --------------------------------- */
 #app-content { 
     padding: 20px; 
     flex-grow: 1; 
-    padding-bottom: 80px; /* Отступ для навигационной панели */
+    padding-bottom: 70px; /* Отступ для навигационной панели */
 }
-.content-view { animation: fadeIn 0.3s ease-out; }
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.subtitle { color: #b0b0d0; margin-top: -10px; margin-bottom: 25px; font-size: 0.9em; }
-.light-theme .subtitle { color: #555577; }
 
-/* Карточки и Заглушки */
-.login-card, .case-card, .profile-details-card, .stats-card, .probabilities-box, .placeholder-card {
+.login-card, .profile-details-card, .stats-card, .placeholder-card {
     background-color: var(--card-color);
     padding: 20px;
     border-radius: var(--border-radius);
@@ -169,101 +167,188 @@ input[type="text"] {
 .placeholder-card { text-align: center; color: #b0b0d0; }
 .light-theme .placeholder-card { color: #555577; }
 
+/* --------------------------------- */
+/* ГЛАВНЫЙ ЭКРАН (CASE STYLE) */
+/* --------------------------------- */
 
-.promo-banner {
-    background-color: var(--secondary-color);
+/* Контейнер для горизонтальной прокрутки кейсов */
+#case-list-container {
+    overflow-x: scroll;
+    padding: 10px 0;
+    margin: 0 -20px; 
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+}
+#case-list {
+    display: inline-flex;
+    padding: 0 20px;
+    gap: 15px;
+}
+.case-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100px; 
+    height: 150px;
+    background-color: var(--card-color);
+    border-radius: var(--border-radius);
     padding: 10px;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: 600;
-}
-.light-theme .promo-banner { background-color: #e0e0e0; color: var(--light-text-color); }
-
-.back-link {
-    color: var(--primary-color);
-    cursor: pointer;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    font-weight: 600;
-}
-.back-link i { margin-right: 5px; }
-
-
-/* Кейс (Осталось без изменений) */
-.case-card { text-align: center; cursor: pointer; transition: transform 0.2s, background-color 0.3s; }
-.case-card:hover { transform: translateY(-5px); }
-.case-icon { font-size: 3rem; margin-bottom: 10px; }
-/* ... (стили для ленты прокрутки и результатов кейса без изменений) ... */
-.case-opening-area {
-    overflow: hidden;
-    position: relative;
-    height: 80px;
-    background-color: #131320;
-    border-radius: 8px;
-    border: 2px solid var(--primary-color);
-    margin-bottom: 20px;
-}
-.scroll-wrapper { position: relative; height: 100%; }
-.prize-reel {
-    display: flex;
-    align-items: center;
-    position: absolute;
-    left: 0;
-    transition: transform 5s cubic-bezier(0.1, 0.9, 0.2, 1);
-    width: max-content;
-}
-.prize-item {
-    padding: 0 10px;
+    box-shadow: var(--shadow);
     flex-shrink: 0;
-    width: 60px;
+    cursor: pointer;
+    position: relative;
+    border: 2px solid transparent;
+    transition: transform 0.2s, border-color 0.2s;
+}
+.case-card:hover { transform: translateY(-5px); }
+.case-card:first-child { border-color: var(--primary-color); } /* Выделение активного/первого кейса */
+
+.case-img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 5px; }
+.case-price {
+    background-color: var(--star-color);
+    color: var(--bg-color);
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+.case-price i { font-size: 0.7rem; margin-left: 4px; }
+
+/* Секция "Вы можете выиграть" */
+.prizes-header {
+    text-align: left;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 5px;
+    font-weight: 600;
+}
+.light-theme .prizes-header { border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+
+/* Контейнер для горизонтальной прокрутки призов */
+#winnable-prizes-list {
+    display: flex;
+    overflow-x: scroll;
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px;
+}
+.prize-display-card {
+    background-color: var(--card-color);
+    padding: 10px;
+    border-radius: var(--border-radius);
     text-align: center;
-    height: 100%;
+    flex-shrink: 0;
+    width: 100px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.prize-display-card img { width: 70px; height: 70px; object-fit: contain; }
+.prize-display-card .prize-name { font-size: 0.8rem; margin: 5px 0 0; font-weight: 600; }
+.prize-display-card .prize-prob { 
+    font-size: 0.75rem; 
+    color: #ffeb3b; 
+    margin-top: 5px;
+    font-weight: 600;
+}
+.light-theme .prize-display-card .prize-prob { color: #cc7800; }
+
+/* --------------------------------- */
+/* ПЕРЕКЛЮЧАТЕЛЬ (SWITCH) - Демо Режим */
+/* --------------------------------- */
+.demo-mode-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #3c3c54;
+    margin-bottom: 15px;
+}
+.demo-mode-toggle .demo-label { font-weight: 600; }
+.light-theme .demo-mode-toggle { border-bottom: 1px solid #d0d0d0; }
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+input:checked + .slider { background-color: #4CAF50; } 
+input:focus + .slider { box-shadow: 0 0 1px #4CAF50; }
+input:checked + .slider:before { transform: translateX(26px); }
+.slider.round { border-radius: 24px; }
+.slider.round:before { border-radius: 50%; }
+
+/* --------------------------------- */
+/* ЭКРАН ИНВЕНТАРЯ */
+/* --------------------------------- */
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+.inventory-item {
+    background-color: var(--card-color);
+    padding: 10px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+.inventory-item img { width: 70px; height: 70px; object-fit: contain; }
+.item-count {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 2px solid var(--card-color);
 }
-.indicator {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 100%;
-    background-color: #ffc107;
-    box-shadow: 0 0 10px #ffc107;
-}
-.prize-image {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-}
-.case-result-box {
-    margin-top: 20px;
+.placeholder-text {
+    grid-column: 1 / -1;
     text-align: center;
-    background-color: var(--secondary-color);
+    color: #b0b0d0;
 }
-.final-prize-image {
-    width: 90px;
-    height: 90px;
-    object-fit: contain;
-    animation: prizeGlow 1.5s infinite alternate;
-}
-@keyframes prizeGlow {
-    from { filter: drop-shadow(0 0 5px rgba(233, 69, 96, 0.5)); transform: scale(1); }
-    to { filter: drop-shadow(0 0 15px var(--primary-color)); transform: scale(1.05); }
-}
-.open-btn { width: 100%; font-size: 1.1rem; padding: 15px; }
-.probabilities-box p {
-    margin: 5px 0;
-    font-size: 0.9em;
-    display: flex;
-    justify-content: space-between;
-}
-/* Конец стилей Кейса */
 
 
-/* Нижняя Навигационная Панель */
+/* --------------------------------- */
+/* НИЖНЯЯ НАВИГАЦИЯ */
+/* --------------------------------- */
 #nav-bar {
     position: fixed;
     bottom: 0;
@@ -279,6 +364,7 @@ input[type="text"] {
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
+    z-index: 10;
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 .nav-item {
@@ -306,4 +392,70 @@ input[type="text"] {
 .light-theme #nav-bar { box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); }
 .light-theme .nav-item { color: #555577; }
 .light-theme .nav-item.active { color: var(--primary-color); }
+
+/* --------------------------------- */
+/* ЭКРАН КЕЙСА (АНИМАЦИЯ) */
+/* --------------------------------- */
+
+.case-opening-area {
+    overflow: hidden;
+    position: relative;
+    height: 100px;
+    background-color: #131320;
+    border-radius: var(--border-radius);
+    border: 3px solid var(--primary-color);
+    margin-bottom: 20px;
+}
+.scroll-wrapper { position: relative; height: 100%; }
+.prize-reel {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    transition: transform 5s cubic-bezier(0.1, 0.9, 0.2, 1);
+    width: max-content;
+}
+.prize-item {
+    padding: 0 5px;
+    flex-shrink: 0;
+    width: 100px; /* Увеличено для картинок */
+    text-align: center;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.indicator {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 100%;
+    background-color: var(--star-color);
+    box-shadow: 0 0 10px var(--star-color);
+}
+.prize-image {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+.case-result-box {
+    margin-top: 20px;
+    text-align: center;
+    background-color: var(--secondary-color);
+    padding: 20px;
+    border-radius: var(--border-radius);
+}
+.final-prize-image {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    animation: prizeGlow 1.5s infinite alternate;
+}
+@keyframes prizeGlow {
+    from { filter: drop-shadow(0 0 5px rgba(33, 150, 243, 0.5)); transform: scale(1); }
+    to { filter: drop-shadow(0 0 15px var(--primary-color)); transform: scale(1.05); }
+}
+.open-btn { width: 100%; font-size: 1.1rem; padding: 15px; }
 

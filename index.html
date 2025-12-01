@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡️ Mini-App Casino | PRO</title>
+    <title>⚡️ Mini-App Case</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <script src="script.js?v=8" defer></script>
+    <script src="script.js?v=9" defer></script>
 </head>
 <body>
     <div id="app-container">
@@ -27,41 +27,58 @@
             <header id="app-header">
                 <div class="header-left">
                     <div class="balance-info">
-                        <i class="fas fa-wallet"></i>
-                        <span id="header-balance">0.00 руб.</span>
+                        <i class="fas fa-coins"></i>
+                        <span id="header-balance">0.00</span>
                     </div>
                 </div>
                 <div class="header-right">
                     <button onclick="toggleTheme()" class="icon-btn theme-toggle-btn"><i class="fas fa-sun" id="theme-icon"></i></button>
-                    <button onclick="logout()" class="icon-btn logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+                    <button id="back-button" onclick="navigateTo('home')" class="icon-btn hidden"><i class="fas fa-chevron-left"></i></button>
                 </div>
             </header>
 
             <main id="app-content">
                 <div id="home-screen" class="content-view">
-                    <h2>📦 Кейсы</h2>
-                    <p class="subtitle">Откройте свой приз!</p>
                     
-                    <div id="case-preview" class="case-card" onclick="navigateTo('case')">
-                        <div class="case-icon">🎁</div>
-                        <h3>Daily Free Case</h3>
-                        <p class="case-desc">Получай приз каждый день.</p>
-                        <button class="primary-btn full-width-btn"><i class="fas fa-gift"></i> Открыть</button>
+                    <div id="case-list-container">
+                        <div id="case-list">
+                            <div class="case-card" data-case-id="daily" onclick="navigateTo('case')">
+                                <img src="assets/podarok.png" alt="Кейс Подарок" class="case-img">
+                                <div class="case-price">25 <i class="fas fa-star"></i></div>
+                            </div>
+                            <div class="case-card premium-case" data-case-id="premium">
+                                <img src="assets/mishka.png" alt="Премиум Кейс" class="case-img">
+                                <div class="case-price">100 <i class="fas fa-star"></i></div>
+                            </div>
+                            <div class="case-card promo-case" data-case-id="promo">
+                                <img src="assets/roza.png" alt="Промо Кейс" class="case-img">
+                                <div class="case-price">50 <i class="fas fa-star"></i></div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="promo-banner">
-                        <p>⭐️ Больше кейсов скоро!</p>
+                    <div class="demo-mode-toggle">
+                        <span class="demo-label">Демо режим</span>
+                        <label class="switch">
+                            <input type="checkbox" id="demo-mode-switch">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <button id="main-open-btn" onclick="openCase()" class="primary-btn full-width-btn big-btn"><i class="fas fa-gift"></i> Получить подарок 25 <i class="fas fa-star"></i></button>
+
+                    <h3 class="prizes-header">ВЫ МОЖЕТЕ ВЫИГРАТЬ</h3>
+                    <div id="winnable-prizes-list">
+                        </div>
+                </div>
+
+                <div id="inventory-screen" class="content-view hidden">
+                    <h2>📦 Инвентарь</h2>
+                    <div id="inventory-grid" class="inventory-grid">
+                        <p id="inventory-empty" class="placeholder-text">Ваш инвентарь пуст.</p>
                     </div>
                 </div>
 
-                <div id="raffles-screen" class="content-view hidden">
-                    <h2>🎟️ Розыгрыши</h2>
-                    <div class="placeholder-card">
-                        <p>Раздел "Розыгрыши" в активной разработке.</p>
-                        <p>Скоро здесь появятся крутые события!</p>
-                    </div>
-                </div>
-                
                 <div id="top-screen" class="content-view hidden">
                     <h2>🏆 Топ Игроков</h2>
                     <div class="placeholder-card">
@@ -74,7 +91,7 @@
                     <div class="profile-details-card">
                         <p><strong>Имя/Логин:</strong> <span id="profile-username"></span></p>
                         <p><strong>ID в Telegram:</strong> <span id="profile-id"></span></p>
-                        <p><strong>Баланс:</strong> <span id="profile-balance">0.00 руб.</span></p>
+                        <p><strong>Баланс:</strong> <span id="profile-balance">0.00 <i class="fas fa-star"></i></span></p>
                     </div>
 
                     <h3>Статистика</h3>
@@ -87,8 +104,6 @@
                 </div>
 
                 <div id="case-screen" class="content-view hidden">
-                    <div class="back-link" onclick="navigateTo('home')"><i class="fas fa-chevron-left"></i> Назад</div>
-
                     <h2>Daily Free Case</h2>
                     
                     <div class="case-opening-area">
@@ -98,30 +113,20 @@
                         </div>
                     </div>
 
-                    <button id="open-case-btn" onclick="openCase()" class="primary-btn open-btn"><i class="fas fa-key"></i> ОТКРЫТЬ (0 руб)</button>
+                    <button id="open-case-btn-roll" onclick="startCaseRoll()" class="primary-btn open-btn"><i class="fas fa-key"></i> КРУТИТЬ (0 <i class="fas fa-star"></i>)</button>
 
                     <div id="case-result-box" class="case-result-box hidden">
                         <h3>🎉 Ваш приз!</h3>
                         <div id="result-emoji" class="result-emoji-display"></div>
                         <p id="result-msg"></p>
-                    </div>
-                    
-                    <div id="probabilities-box" class="probabilities-box">
-                        <h3>Шансы выпадения</h3>
-                        <p>🐻 Мишка — 5%</p>  
-                        <p>🎁 Подарок — 10%</p>  
-                        <p>❤️ Сердце — 15%</p>   
-                        <p>🌹 Роза — 20%</p>   
-                        <p>🌼 Цветок — 25%</p>   
-                        <p>🍭 Леденец — 25%</p>   
+                        <button onclick="navigateTo('home')" class="primary-btn">На Главную</button>
                     </div>
                 </div>
-
             </main>
             
             <nav id="nav-bar">
-                <button class="nav-item active" data-view="home"><i class="fas fa-box"></i> Главная</button>
-                <button class="nav-item" data-view="raffles"><i class="fas fa-ticket-alt"></i> Розыгрыши</button>
+                <button class="nav-item active" data-view="home"><i class="fas fa-box"></i> Кейсы</button>
+                <button class="nav-item" data-view="inventory"><i class="fas fa-archive"></i> Инвентарь</button>
                 <button class="nav-item" data-view="top"><i class="fas fa-trophy"></i> Топ</button>
                 <button class="nav-item" data-view="profile"><i class="fas fa-user-circle"></i> Профиль</button>
             </nav>
