@@ -2,14 +2,19 @@ let username = "";
 let tg = window.Telegram.WebApp;
 let currentView = 'login'; 
 
-// --- ОБНОВЛЕННЫЙ МАССИВ ПРИЗОВ (с путями к картинкам) ---
+// --- МАССИВ ПРИЗОВ ---
+// 6 предметов. Сумма шансов (prob) = 1.0 (100%)
 const PRIZES = [
-    { emoji: "🐻", prob: 0.7, name: "Мишка", image: "assets/Мишка.png" }, 
-    { emoji: "💎", prob: 0.2, name: "Алмаз", image: "assets/Алмаз.png" }, 
-    { emoji: "🐸", prob: 0.1, name: "Pepe", image: "assets/Pepe.png" } 
+    { emoji: "🐻", prob: 0.35, name: "Мишка", image: "assets/mishka.png" },    // 35% (Легендарный)
+    { emoji: "🎁", prob: 0.10, name: "Подарок", image: "assets/podarok.png" }, // 0.10% (Эпический)
+    { emoji: "❤️", prob: 0.35, name: "Сердце", image: "assets/serdce.png" },   // 35% (Редкий)
+    { emoji: "🌹", prob: 0.10, name: "Роза", image: "assets/roza.png" },       // 10% (Обычный)
+    { emoji: "🌼", prob: 0.05, name: "Цветок", image: "assets/cvetok.png" },   // 0.5% (Частый)
+    { emoji: "🍭", prob: 0.05, name: "Леденец", image: "assets/ledenets.png" } // 0.5% (Частый)
 ];
-const PRIZE_ITEM_WIDTH = 80; // (60px width + 2*10px padding)
-const SCROLL_DURATION = 5000; // 5 секунд анимация
+
+const PRIZE_ITEM_WIDTH = 80; 
+const SCROLL_DURATION = 5000; 
 
 // --- Инициализация ---
 window.addEventListener("load", () => {
@@ -49,7 +54,7 @@ function showView(viewName) {
         targetElement = document.getElementById('home-screen');
     } else if (viewName === 'case') {
         targetElement = document.getElementById('case-screen');
-        resetCaseScreen(); // Сброс при переходе на экран кейса
+        resetCaseScreen();
     } else if (viewName === 'profile') {
         targetElement = document.getElementById('profile-screen');
     }
@@ -62,22 +67,18 @@ function showView(viewName) {
 
 function navigateTo(viewName) {
     showView(viewName);
-    if (viewName === 'profile') {
-        updateHeaderAndProfile(); 
-    }
+    if (viewName === 'profile') updateHeaderAndProfile();
 }
 
-// --- Обновление данных пользователя ---
+// --- Данные пользователя ---
 function updateHeaderAndProfile() {
     const userId = tg.initDataUnsafe.user?.id || 'N/A';
-    
     document.getElementById("header-username").textContent = username;
     document.getElementById("profile-username").textContent = username;
     document.getElementById("profile-id").textContent = userId;
 }
 
-
-// --- Логика Входа ---
+// --- Вход ---
 function login() {
     const code = document.getElementById("code-input").value.trim();
     const msgElem = document.getElementById("login-msg");
@@ -87,16 +88,15 @@ function login() {
         username = tg.initDataUnsafe.user?.username || 
                    tg.initDataUnsafe.user?.first_name || 
                    "User#" + (tg.initDataUnsafe.user?.id || 'GUEST');
-        
         localStorage.setItem("username", username);
         updateHeaderAndProfile();
         navigateTo('home');
     } else {
-        msgElem.textContent = "❌ Неверный или неполный код! Введите 5 цифр.";
+        msgElem.textContent = "❌ Неверный или неполный код!";
     }
 }
 
-// --- Логика Выхода ---
+// --- Выход ---
 function logout() {
     localStorage.removeItem("username");
     username = "";
@@ -105,23 +105,19 @@ function logout() {
     tg.close();
 }
 
-// --- Вспомогательная функция для создания элемента приза (изображения) ---
+// --- Создание элемента картинки ---
 function createPrizeElement(prize) {
     const item = document.createElement('div');
     item.classList.add('prize-item');
-    
     const img = document.createElement('img');
     img.src = prize.image; 
     img.alt = prize.name;
     img.classList.add('prize-image');
-
     item.appendChild(img);
     return item;
 }
 
 // --- Логика Кейса ---
-
-// Сброс и подготовка экрана кейса
 function resetCaseScreen() {
     document.getElementById("case-result-box").classList.add('hidden');
     document.getElementById("open-case-btn").disabled = false;
@@ -132,7 +128,6 @@ function resetCaseScreen() {
     reel.style.transform = 'translateX(0)';
     reel.style.transition = 'none';
 
-    // Заполнение ленты: 200+ элементов 
     for (let i = 0; i < 200; i++) {
         let prize = PRIZES[Math.floor(Math.random() * PRIZES.length)];
         const item = createPrizeElement(prize); 
@@ -140,21 +135,16 @@ function resetCaseScreen() {
     }
 }
 
-// Выбор приза на основе вероятности
 function spinPrize() {
     let rnd = Math.random();
     let total = 0;
-
     for (const prize of PRIZES) {
         total += prize.prob;
-        if (rnd <= total) {
-            return prize;
-        }
+        if (rnd <= total) return prize;
     }
     return PRIZES[0];
 }
 
-// Открытие кейса с анимацией
 function openCase() {
     document.getElementById("open-case-btn").disabled = true;
     document.getElementById("open-case-btn").textContent = "Крутим...";
@@ -165,39 +155,27 @@ function openCase() {
     
     resetCaseScreen();
     
-    // 2. Вставляем выигрышный приз в позицию, где остановится прокрутка
+    // Вставляем выигрышный приз в позицию 198
     const stopIndex = 198; 
     const winningItem = createPrizeElement(winningPrize);
     reel.replaceChild(winningItem, reel.children[stopIndex]); 
 
-    // 3. Вычисляем смещение для остановки
-    // PRIZE_ITEM_WIDTH = 80px. Смещение, чтобы элемент stopIndex был под индикатором.
-    
-    // Область просмотра - 450px, Лента - max-content. 
-    // offsetToCenter: Смещение до центра контейнера кейса
+    // Расчет смещения
     const offsetToCenter = (reel.offsetWidth / 2) - (PRIZE_ITEM_WIDTH / 2);
-    // Общий сдвиг, чтобы остановить элемент stopIndex под индикатором
     const totalShift = (stopIndex * PRIZE_ITEM_WIDTH) - offsetToCenter;
-    
-    // Добавляем немного случайности
     const randomOffset = Math.floor(Math.random() * 40) - 20; 
     const finalShift = totalShift + randomOffset;
 
-    // Устанавливаем анимацию
     reel.style.transition = `transform ${SCROLL_DURATION / 1000}s cubic-bezier(0.1, 0.9, 0.2, 1)`;
     reel.style.transform = `translateX(-${finalShift}px)`;
 
-    // 4. После анимации показываем результат
     setTimeout(() => {
-        // Выводим большую картинку в результате
         document.getElementById("result-emoji").innerHTML = `<img src="${winningPrize.image}" alt="${winningPrize.name}" class="final-prize-image">`;
         document.getElementById("result-msg").textContent = `Поздравляем! Вы выиграли: ${winningPrize.name}!`;
         document.getElementById("case-result-box").classList.remove('hidden');
         document.getElementById("open-case-btn").disabled = false;
         document.getElementById("open-case-btn").textContent = "ОТКРЫТЬ СНОВА (0 руб)";
-        
         tg.HapticFeedback.notificationOccurred('success');
-
     }, SCROLL_DURATION);
 }
 
