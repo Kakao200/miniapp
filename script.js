@@ -1,4 +1,3 @@
-// script.js
 let username = "";
 let tg = window.Telegram.WebApp;
 let isDarkTheme = false;
@@ -6,12 +5,12 @@ let userBalance = 1000;
 const CASE_COST = 25;
 
 const PRIZES = [
-    { emoji: "🐻", prob: 0.05, name: "Мишка", image: "assets/teddy_bear.png", stars: 100 },
-    { emoji: "🎁", prob: 0.10, name: "Подарок", image: "assets/giftbox_red.png", stars: 75 },
-    { emoji: "❤️", prob: 0.15, name: "Сердце", image: "assets/heart_gift.png", stars: 50 },
-    { emoji: "🌹", prob: 0.20, name: "Роза", image: "assets/rose.png", stars: 25 },
-    { emoji: "🌼", prob: 0.25, name: "Цветок", image: "assets/cvetok.png", stars: 15 },
-    { emoji: "🍭", prob: 0.25, name: "Леденец", image: "assets/cup.png", stars: 10 }
+    { name: "Мишка", image: "assets/mishka.png", stars: 100, prob: 30 },
+    { name: "Цветок", image: "assets/cvetok.png", stars: 50, prob: 10 },
+    { name: "Роза", image: "assets/roza.png", stars: 75, prob: 15 },
+    { name: "Сердце", image: "assets/serdce.png", stars: 150, prob: 5 },
+    { name: "Подарок", image: "assets/podarok.png", stars: 25, prob: 25 },
+    { name: "Леденец", image: "assets/ledenez.png", stars: 10, prob: 15 }
 ];
 
 function showScreen(screenId) {
@@ -51,18 +50,17 @@ function renderPrizesGrid() {
         prizeElement.className = 'prize-item';
         prizeElement.innerHTML = `
             <img src="${prize.image}" alt="${prize.name}">
-            <div class="prize-stars">
-                <img src="assets/star.png" alt="Star" class="star-icon">
-                <span>${prize.stars}</span>
-            </div>
+            <div class="prize-name-small">${prize.name}</div>
         `;
         grid.appendChild(prizeElement);
     });
 }
 
 function spinPrize() {
-    let rnd = Math.random();
+    const totalProb = PRIZES.reduce((sum, prize) => sum + prize.prob, 0);
+    let rnd = Math.random() * totalProb;
     let total = 0;
+    
     for (const prize of PRIZES) {
         total += prize.prob;
         if (rnd <= total) return prize;
@@ -86,12 +84,13 @@ function startCaseOpening() {
     
     const spinningImg = document.getElementById('spinning-prize-img');
     let spinCount = 0;
-    const maxSpins = 20;
-    const spinInterval = 100;
+    const maxSpins = 30;
+    const spinInterval = 80;
     
     const spinAnimation = setInterval(() => {
         const randomPrize = PRIZES[Math.floor(Math.random() * PRIZES.length)];
         spinningImg.src = randomPrize.image;
+        spinningImg.alt = randomPrize.name;
         spinCount++;
         
         if (spinCount >= maxSpins) {
@@ -105,6 +104,7 @@ function startCaseOpening() {
 function showResult(prize) {
     setTimeout(() => {
         document.getElementById('won-prize-img').src = prize.image;
+        document.getElementById('won-prize-img').alt = prize.name;
         document.getElementById('won-prize-name').textContent = prize.name;
         document.getElementById('won-prize-value').textContent = prize.stars;
         showScreen('result-screen');
